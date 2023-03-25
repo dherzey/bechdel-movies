@@ -1,5 +1,5 @@
-# Data Engineering Zoomcamp Project
-The final project required to finish DataTalks.Club's Data Engineering Zoomcamp.
+# Data project of Bechdel movies
+This project is a final requirement for DataTalks.Club's data engineerring bootcamp. 
 
 ## Problem Statement
 
