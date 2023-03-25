@@ -28,7 +28,7 @@ pip install beautifulsoup4
 ```
 
 ### Scraping the Oscars database
-Full code found in [ScrapeOscarsDB.py](https://github.com/dherzey/DataTalks_DataEngineering_2023/blob/main/week_7_PROJECT/ingestion/ScrapeOscarsDB.py)
+Full code found in [scrape_oscars_db.py](https://github.com/dherzey/bechdel-movies-project/blob/main/codes/scrape_oscars_db.py)
 
 ### Scraping Bechdel test movie list
 ```python

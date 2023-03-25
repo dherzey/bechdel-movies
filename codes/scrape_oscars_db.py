@@ -206,7 +206,7 @@ if __name__=="__main__":
     print("DONE: Extracted needed elements from HTML")
 
     results_df = get_raw_dataframe(results_dict)
-    print("DONE: Data formatted as a structured dataframe")
+    print("DONE: Data formatted as a structured dataframe\n")
 
     print("Test sample results:")
     print(results_df.sample(10))
