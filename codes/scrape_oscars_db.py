@@ -198,4 +198,15 @@ def get_raw_dataframe(oscars_results_dict):
 
 
 if __name__=="__main__":
-    scrape_oscars_data()
+
+    page_source = scrape_oscars_data()
+    print("DONE: Scraped Oscars data")
+
+    results_dict = extract_raw_data(page_source)
+    print("DONE: Extracted needed elements from HTML")
+
+    results_df = get_raw_dataframe(results_dict)
+    print("DONE: Data formatted as a structured dataframe")
+
+    print("Test sample results:")
+    print(results_df.sample(10))

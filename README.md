@@ -1,5 +1,5 @@
-# Data project of Bechdel movies
-This project is a final requirement for DataTalks.Club's data engineerring bootcamp. 
+# Bechdel movies and the Academy Awards
+This project is part of a final requirement for DataTalks.Club's data engineerring bootcamp. 
 
 ## Problem Statement
 
