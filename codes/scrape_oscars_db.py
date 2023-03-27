@@ -63,12 +63,12 @@ def scrape_oscars_data(delay=60):
         #resultscontainer will contain all our needed Oscars data
         driver.find_element(By.XPATH, '//*[@id="resultscontainer"]')
 
-        #get html source for BeautifulSoup extraction
-        page_source = driver.page_source
-
     except NoSuchElementException as error:
         print(error)
         print(f"Needed element still not found after {delay} seconds delay")
+
+    #get html source for BeautifulSoup extraction
+    page_source = driver.page_source
 
     #close driver
     driver.close()
@@ -77,82 +77,10 @@ def scrape_oscars_data(delay=60):
     return page_source
 
 
-def extract_raw_data(page_source):
+def extract_results_dataframe(page_source):
     """
-    Function which parses the page_source using BeautifulSoup. All raw 
-    results are extracted and saved as a dictionary object.
-    
-    Returns a dictionary object with award years as its main key. Each key 
-    consists of the award category and the nominated/winning movie for each.
-    See below sample structure of the dictionary output:
-
-    {
-        AwardYear_1: {
-            AwardCategory_1: {
-                nominated_films: [],
-                winning_films: []
-            }
-        },
-        AwardYear_2: ...
-    }
-    """
-
-    soup = BeautifulSoup(page_source, "lxml")
-    results_container = soup.find('div', {'id':'resultscontainer'})
-
-    class_ = 'awards-result-chron result-group group-awardcategory-chron'
-    award_year_all = results_container.find_all('div', class_=class_)
-
-    oscars_results_dict = {}
-    for award_year_group in award_year_all:
-
-        #find the award year title
-        award_year = award_year_group.find('div', class_='result-group-title')\
-                                     .get_text(strip=True)       
- 
-        #award category result subgroup (each contains award title and nominees)
-        class_ = 'result-subgroup subgroup-awardcategory-chron'
-        award_category_all = award_year_group.find_all('div', class_=class_)
-
-        award_subgroup_dict = {}
-        for award_category_group in award_category_all:
-
-            #dictionary to contain movie lists
-            movies_dict = {"nominated":[], "won":[]}
-
-            #find award title
-            award_title = award_category_group.find('div', class_='result-subgroup-title')\
-                                              .get_text(strip=True)            
-            try:
-                #find nominated movies
-                movies = [movie.get_text(strip=True) for movie in award_category_group\
-                               .find_all('div', class_='awards-result-film-title')]
-                
-                #find winning movie
-                winner_group = award_category_group.find('span', {'title':'Winner'})\
-                                                   .find_next_sibling('div')
-                
-                movies_dict["won"] = [movie.get_text(strip=True) for movie in winner_group\
-                                           .find_all('div', class_='awards-result-film-title')] 
-                
-                #remove duplicates and the winner from nominated list
-                movies_dict["nominated"] = list(set(movies) - set(movies_dict["won"]))     
-
-            except AttributeError:
-                pass
-
-            award_subgroup_dict[award_title] = movies_dict
-
-        oscars_results_dict[award_year] = award_subgroup_dict
-
-    return oscars_results_dict
-
-
-def get_raw_dataframe(oscars_results_dict):
-    """
-    Using the raw dictionary data from extract_oscars_data(), this
-    function will read the dictionary object and turn it into the 
-    structured format of a dataframe
+    Function which parses the page_source using BeautifulSoup 
+    and turns it into the structured format of a dataframe
 
     Returns a dataframe with the following columns:
         - AwardYear: the year the award was received
@@ -162,39 +90,81 @@ def get_raw_dataframe(oscars_results_dict):
         - AwardStatus: whether the film was only nominated or had won
     """
 
-    df_list = []
-    for key, values in oscars_results_dict.items():
+    soup = BeautifulSoup(page_source, "lxml")
+    results_container = soup.find('div', {'id':'resultscontainer'})
 
+    class_ = 'awards-result-chron result-group group-awardcategory-chron'
+    award_year_all = results_container.find_all('div', class_=class_)
+
+    #list to contain all dataframe for each award year
+    oscars_results = []
+    
+    for award_year_group in award_year_all:
+
+        #main structure of the dataframe
         df_structure = {
-            "AwardYear":'',
-            "AwardCeremonyNum":'',
-            "Movie":[],
-            "AwardCategory":[],
-            "AwardStatus":[]
-        }
+                        "AwardYear":'',
+                        "AwardCeremonyNum":'',
+                        "Movie":[],
+                        "AwardCategory":[],
+                        "AwardStatus": []
+                    }
 
-        #separate key strings to extract year
-        key_split = key.split(" ")
+        #find the award year title
+        award_year = award_year_group.find('div',class_='result-group-title')\
+                                     .get_text(strip=True)
+
+        #separate award year title to extract year
+        key_split = award_year.split(" ")
         df_structure['AwardYear'] = key_split[0]
         df_structure['AwardCeremonyNum'] = re.findall(r'\d+',key_split[1])[0]
-
-        #extract all movies per award year
-        for categ, movies in values.items():
-            movies_concat = sum(list(movies.values()),[])
-            count = len(movies_concat)
-
-            if count > 0:
-                df_structure['Movie'].extend(movies_concat)
-                df_structure['AwardCategory'].extend(list(np.repeat([categ],count)))
-
-                for status, movie in movies.items():
-                    df_structure['AwardStatus'].extend(list(np.repeat([status],len(movie))))
         
-        #append dataframe to list
-        df_list.append(pd.DataFrame(df_structure))
+        #award category result subgroup (each contains award title and nominees)
+        class_ = 'result-subgroup subgroup-awardcategory-chron'
+        award_category_all = award_year_group.find_all('div',class_=class_)
 
-    #concatenate and return all award years dataframe into one    
-    return pd.concat(df_list)
+        for award_category_group in award_category_all:
+
+            #find award title
+            award_title = award_category_group.find('div',class_='result-subgroup-title')\
+                                              .get_text(strip=True)
+            
+            try:
+                #find nominated movies
+                movies = [movie.get_text(strip=True) for movie in award_category_group\
+                               .find_all('div', class_='awards-result-film-title')]
+
+                #remove duplicates
+                movies = list(set(movies)) 
+
+                #find winning movie/s
+                winner_group = award_category_group.find('span', {'title':'Winner'})\
+                                                   .find_next_sibling('div')
+
+                winners = [movie.get_text(strip=True) for movie in winner_group\
+                                .find_all('div', class_='awards-result-film-title')]
+
+                #update df_structure movie and category lists
+                if len(movies) > 0:
+                    df_structure['Movie'].extend(movies)
+                    repeat = list(np.repeat([award_title],len(movies)))
+                    df_structure['AwardCategory'].extend(repeat)
+
+                    #add winner/s
+                    repeat = list(np.repeat(['nominated'],len(movies)))
+                    for winner in winners:
+                        repeat[movies.index(winner)] = 'won'
+
+                    df_structure['AwardStatus'].extend(repeat)
+        
+            except AttributeError:
+                pass
+
+        #append dataframe to list
+        oscars_results.append(pd.DataFrame(df_structure))
+
+    #concatenate all award year into a single dataframe     
+    return pd.concat(oscars_results).reset_index(drop=True)
 
 
 if __name__=="__main__":
@@ -202,10 +172,8 @@ if __name__=="__main__":
     page_source = scrape_oscars_data()
     print("DONE: Scraped Oscars data")
 
-    results_dict = extract_raw_data(page_source)
+    results_df = extract_results_dataframe(page_source)
     print("DONE: Extracted needed elements from HTML")
-
-    results_df = get_raw_dataframe(results_dict)
     print("DONE: Data formatted as a structured dataframe\n")
 
     print("Test sample results:")
