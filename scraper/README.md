@@ -1,4 +1,4 @@
-## Web Scrapers
+## Extracting data
 This folder contains the Python scripts used to web scrape or collect data from different web sources.
 
 ### I. Installing Selenium and BeautifulSoup to scrape the Oscars database

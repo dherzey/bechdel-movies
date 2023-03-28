@@ -15,10 +15,15 @@ from selenium.common.exceptions import NoSuchElementException
 
 def scrape_oscars_data(delay=60):
     """
-    Scrapes the Oscars Award database from the first until the
-    latest awarding year ceremony using Selenium
+    Interacts with the Academy Award database using Selenium to return 
+    award results from the first until the latest awarding year ceremony.
 
-    Returns the page source of the site with the final results
+    Arguments:
+        delay: time to wait for results page to load in seconds.
+               default set at 60 seconds
+
+    Returns:
+        HTML page source of the site
     """
 
     options = webdriver.FirefoxOptions()
@@ -77,17 +82,21 @@ def scrape_oscars_data(delay=60):
     return page_source
 
 
-def extract_results_dataframe(page_source):
+def extract_oscar_results(page_source):
     """
     Function which parses the page_source using BeautifulSoup 
-    and turns it into the structured format of a dataframe
+    and turns it into the structured format of a dataframe.
 
-    Returns a dataframe with the following columns:
-        - AwardYear: the year the award was received
-        - AwardCeremonyNum: the nth annual ceremony award
-        - Movie: the title of the nominated film
-        - AwardCategory: the category the film was nominated for
-        - AwardStatus: whether the film was only nominated or had won
+    Arguments:
+        page_source: HTML source of the site
+
+    Returns:
+        Dataframe with the following columns:
+            - AwardYear: the year the award was received
+            - AwardCeremonyNum: the nth annual ceremony award
+            - Movie: the title of the nominated film
+            - AwardCategory: the category the film was nominated for
+            - AwardStatus: whether the film was only nominated or had won
     """
 
     soup = BeautifulSoup(page_source, "lxml")
@@ -100,7 +109,6 @@ def extract_results_dataframe(page_source):
     oscars_results = []
     
     for award_year_group in award_year_all:
-
         #main structure of the dataframe
         df_structure = {
                         "AwardYear":'',
@@ -124,7 +132,6 @@ def extract_results_dataframe(page_source):
         award_category_all = award_year_group.find_all('div',class_=class_)
 
         for award_category_group in award_category_all:
-
             #find award title
             award_title = award_category_group.find('div',class_='result-subgroup-title')\
                                               .get_text(strip=True)
@@ -172,7 +179,7 @@ if __name__=="__main__":
     page_source = scrape_oscars_data()
     print("DONE: Scraped Oscars data")
 
-    results_df = extract_results_dataframe(page_source)
+    results_df = extract_oscar_results(page_source)
     print("DONE: Extracted needed elements from HTML")
     print("DONE: Data formatted as a structured dataframe\n")
 
