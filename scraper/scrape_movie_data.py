@@ -44,6 +44,8 @@ def get_tmdb_data(API_KEY, delay=5):
     total_pages = {}
 
     # (1) collect total number of pages per year
+    print("START: Collecting total number of pages per year...")
+
     for year in range(1874,latest):
         response = requests.get(f'{url}&primary_release_year={year}')
         movies = response.json()
@@ -57,13 +59,20 @@ def get_tmdb_data(API_KEY, delay=5):
         else:
             total_pages[year] = pages
 
+        #log update
+        print(f"Year {year} with {pages} pages")
+
         #delay next request
         time.sleep(delay)
+
+    print("DONE: Collected total number of pages per year")
 
     #dictionary to contain year and tmdb ids
     tmdb_ids = []
 
     # (2) collect top most popular tmdb ids per year
+    print("START: Collecting top most popular tmdb movies per year...")
+
     for year, pages in total_pages.items():
         for page in range(1,pages+1):
             response = requests.get(f'{url}&primary_release_year={year}&page={page}')
@@ -73,13 +82,19 @@ def get_tmdb_data(API_KEY, delay=5):
 
             #delay next request
             time.sleep(delay)
+    
+        #log update
+        print(f"Scraped id for year {year}")
+
+    print("DONE: Collected top most popular tmdb movies per year")
 
     #list containing dataframes
     df_list = []
 
     # (3) collect imdb ids plus the cast and crew info of the movie
-    for movie_id in tmdb_ids:
+    print("START: Collecting cast and crew info for each movie...")
 
+    for movie_id in tmdb_ids:
         #dictionaries for data structure
         df_structure = {
             'tmdb_id':movie_id,
@@ -122,15 +137,25 @@ def get_tmdb_data(API_KEY, delay=5):
         #convert to dataframe and append to list
         df_list.append(pd.DataFrame(df_structure))
 
+        #log update
+        print(f"Scraped cast and crew info for {movie_id}")
+
         #delay next request
         time.sleep(delay)
 
     df_tmdb = pd.concat(df_list).reset_index(drop=True)
 
+    print("DONE: Collected cast and crew info for each movie")
+
+    #get tmdb person ids
+    ids = df_tmdb['tmdb_people_id'].to_list()
+
+    #empty list to store imdb person ids
     imdb_people = []
 
     # (4) get imdb id of each crew and cast of each movie
-    ids = df_tmdb['tmdb_people_id'].to_list()
+    print("START: Getting imdb person id for each crew and cast...")
+
     for id in ids:
         url = f'https://api.themoviedb.org/3/person/{id}/external_ids?api_key={API_KEY}'
         response = requests.get(f'{url}')
@@ -139,11 +164,16 @@ def get_tmdb_data(API_KEY, delay=5):
         #add to list
         imdb_people.append(person['imdb_id'])
 
+        #log update
+        print(f"Extracted imdb person id for tmdb {id}")
+
         #delay next request
         time.sleep(delay)
 
     #update final dataframe
     df_tmdb['imdb_person_id'] = imdb_people
+
+    print("DONE: Dataframe created and updated")
 
     return df_tmdb
 
@@ -153,6 +183,10 @@ if __name__=='__main__':
 
     API_KEY = config.get('tmdb', 'api_key')
     df = get_tmdb_data(API_KEY)
+
+    #save final dataframe as a csv file
+    path = '/home/jdtganding/Documents/bechdel-movies-project/data'
+    df.to_csv(f'{path}/TMDBFullResults.csv', index=False)
 
     #show sample
     df.sample(10)
