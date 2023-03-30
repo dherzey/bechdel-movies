@@ -19,3 +19,5 @@ sudo mv geckodriver /usr/local/bin/
 #we also install beautifulsoup for extracting data in our html files
 pip install beautifulsoup4
 ```
+
+### II. Creating TMDB account to generate API key

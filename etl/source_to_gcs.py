@@ -6,6 +6,7 @@ import sys
 
 sys.path.append("../bechdel-movies-project/scraper")
 from scrape_oscars_db import *
+from scrape_movie_data import *
 
-# scrape_oscars_data()
+
 print('Done')

@@ -12,6 +12,16 @@ from configparser import ConfigParser
 
 
 def get_bechdel_list():
+    """
+    Uses the bechdeltest.com API to collect the list of
+    movies with and their Bechdel score.
+
+    Arguments: 
+        None
+
+    Returns:
+        Dataframe of movies and their Bechdel scores
+    """
 
     url = 'http://bechdeltest.com/api/v1/getAllMovies'
     html = requests.get(url).content
@@ -21,6 +31,15 @@ def get_bechdel_list():
 
 
 def get_imdb_data(chunksize=500_000):
+    """
+    Reads movie datasets from IMDB
+
+    Arguments:
+        chunksize: number of rows to read per iteration
+    
+    Returns:
+        Dataframe of IMDB movie data
+    """
 
     url = 'https://datasets.imdbws.com/title.basics.tsv.gz'
     imdb_titles = pd.read_csv(url,
@@ -32,10 +51,59 @@ def get_imdb_data(chunksize=500_000):
     return imdb_titles
 
 
-def get_tmdb_data(API_KEY, delay=5):
+def response_json(API_URL):
+    """
+    Get content of specified url
+
+    Arguments:
+        API_URL: url of API
+
+    Returns:
+        json object of the response
+    """
+
+    response = requests.get(API_URL)
+
+    if response.status_code==200:
+        return response.json()
+    else:
+        return "REQUEST ERROR"
+
+
+def get_tmdb_data(API_KEY, from_year=1874, to_year=None, delay=5):
+    """
+    Scrapes and extract movie credits data from The Movie Database 
+    using heir own API.
+
+    Arguments:
+        - API_KEY: the generated API key from the tmdb API
+        - from_year: beginning year from when we start our scraping.
+                     Default set to 1874. 
+        - to_year: final year from when we end our scraping.
+                   Default set to None which will get current year.
+        - delay: time delay in seconds in-between requests. 
+                 Default set to 5 seconds.
+
+    Returns:
+        Dataframe with the following columns:
+            - tmdb_id: movie id from tmdb
+            - imdb_id: movie id from imdb
+            - tmdb_person_id: tmdb id of cast/crew
+            - name: person name of cast/crew
+            - gender: person's gender (0-unspecified,
+                      1-female, 2-male)
+            - department: film department the person
+                          is known for
+            - job: person job within the department
+            - credit_type: whether person is cast or crew
+            - imdb_person_id: imdb id of cast/crew
+    """
 
     #get latest year
-    latest = date.today().year
+    if to_year == None:
+        latest = date.today().year
+    else:
+        latest = to_year
 
     #main discover api url
     url = f'https://api.themoviedb.org/3/discover/movie?api_key={API_KEY}'
@@ -46,9 +114,8 @@ def get_tmdb_data(API_KEY, delay=5):
     # (1) collect total number of pages per year
     print("START: Collecting total number of pages per year...")
 
-    for year in range(1874,latest):
-        response = requests.get(f'{url}&primary_release_year={year}')
-        movies = response.json()
+    for year in range(from_year, latest+1):
+        movies = response_json(f'{url}&primary_release_year={year}')
         pages = movies['total_pages']
 
         #tmdb api only allows up to 500 pages maximum
@@ -74,9 +141,8 @@ def get_tmdb_data(API_KEY, delay=5):
     print("START: Collecting top most popular tmdb movies per year...")
 
     for year, pages in total_pages.items():
-        for page in range(1,pages+1):
-            response = requests.get(f'{url}&primary_release_year={year}&page={page}')
-            movies = response.json()
+        for page in range(1, pages+1):
+            movies = response_json(f'{url}&primary_release_year={year}&page={page}')
             ids = [movie['id'] for movie in movies['results']]
             tmdb_ids.extend(ids)
 
@@ -108,8 +174,7 @@ def get_tmdb_data(API_KEY, delay=5):
         }
 
         url = f'https://api.themoviedb.org/3/movie/{movie_id}?api_key={API_KEY}'
-        response = requests.get(f'{url}&append_to_response=credits')
-        movies = response.json()
+        movies = response_json(f'{url}&append_to_response=credits')
 
         #get imdb id of movie for merging with imdb datasets
         df_structure['imdb_id'] = movies['imdb_id']
@@ -158,8 +223,7 @@ def get_tmdb_data(API_KEY, delay=5):
 
     for id in ids:
         url = f'https://api.themoviedb.org/3/person/{id}/external_ids?api_key={API_KEY}'
-        response = requests.get(f'{url}')
-        person = response.json()
+        person = response_json(f'{url}')
 
         #add to list
         imdb_people.append(person['imdb_id'])
@@ -177,16 +241,18 @@ def get_tmdb_data(API_KEY, delay=5):
 
     return df_tmdb
 
+
 if __name__=='__main__':
+
     config = ConfigParser()
     config.read('/home/jdtganding/Documents/bechdel-movies-project/api_keys.cfg')
 
     API_KEY = config.get('tmdb', 'api_key')
-    df = get_tmdb_data(API_KEY)
+    df = get_tmdb_data(API_KEY=API_KEY, from_year=2023)
 
     #save final dataframe as a csv file
     path = '/home/jdtganding/Documents/bechdel-movies-project/data'
-    df.to_csv(f'{path}/TMDBFullResults.csv', index=False)
+    df.to_csv(f'{path}/TMDB2023Results.csv', index=False)
 
     #show sample
     df.sample(10)
