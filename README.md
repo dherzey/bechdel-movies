@@ -27,8 +27,14 @@ IMDB datasets are available to download from https://www.imdb.com/interfaces/. F
 - title.principals.tsv.gz
 - title.ratings.tsv.gz
 
-### Using tmDB API to collect movie data
-We use the tmDB API to collect the top popular movies of each year along with their cast and crew info. See the full code under `get_tmdb_data()`in [scrape_movie_data.py](https://github.com/dherzey/bechdel-movies-project/blob/main/scraper/scrape_movie_data.py).
+### Using TMDB API to collect movie data
+We use the TMDB API to collect the top popular movies of each year along with their cast and crew info. See the full code under `get_tmdb_data()`in [scrape_movie_data.py](https://github.com/dherzey/bechdel-movies-project/blob/main/scraper/scrape_movie_data.py).
+
+<hr>
+<img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_long_2-9665a76b1ae401a510ec1e0ca40ddcb3b0cfe45f1d51b77a308fea0845885648.svg" alt="TMDB logo" style="height: 50px; width:150px"/>
+
+***This product uses the TMDB API but is not endorsed or certified by TMDB.***
+<hr>
 
 ## Configure cloud resources using Terraform
 
