@@ -53,17 +53,17 @@ def get_imdb_data(chunksize=500_000):
 
 def response_json(API_URL):
     """
-    Get content of specified url
+    Uses Python requests to get content of specified url
 
     Arguments:
         API_URL: url of API
 
     Returns:
-        json object of the response
+        json object of the response. 
+        If status code error, returns "REQUEST ERROR" string
     """
 
     response = requests.get(API_URL)
-
     if response.status_code==200:
         return response.json()
     else:
@@ -77,9 +77,9 @@ def get_tmdb_data(API_KEY, from_year=1874, to_year=None, delay=5):
 
     Arguments:
         - API_KEY: the generated API key from the tmdb API
-        - from_year: beginning year from when we start our scraping.
+        - from_year: beginning year to start collecting movie data.
                      Default set to 1874. 
-        - to_year: final year from when we end our scraping.
+        - to_year: final year to end collecting movie data.
                    Default set to None which will get current year.
         - delay: time delay in seconds in-between requests. 
                  Default set to 5 seconds.
@@ -248,11 +248,11 @@ if __name__=='__main__':
     config.read('/home/jdtganding/Documents/bechdel-movies-project/api_keys.cfg')
 
     API_KEY = config.get('tmdb', 'api_key')
-    df = get_tmdb_data(API_KEY=API_KEY, from_year=2023)
+    df = get_tmdb_data(API_KEY=API_KEY, to_year=1900)
 
     #save final dataframe as a csv file
     path = '/home/jdtganding/Documents/bechdel-movies-project/data'
-    df.to_csv(f'{path}/TMDB2023Results.csv', index=False)
+    df.to_csv(f'{path}/TMDBResults_1874-1900.csv', index=False)
 
     #show sample
     df.sample(10)
