@@ -16,7 +16,7 @@ Data is collected from the following web sources and database:
 ### Scraping the Oscars database
 Results for the Academy Awards nominees and winners from the first Academy Awards until the latest as collected from the online Academy Awards database (https://awardsdatabase.oscars.org/). In order to acquire the full HTML source of the award results, Selenium was used to interact with the site and collect its page source which was then parsed using BeautifulSoup for data extraction. See the full code in [scrape_oscars_db.py](https://github.com/dherzey/bechdel-movies-project/blob/main/scraper/scrape_oscars_db.py).
 
-### Scraping Bechdel test movie list
+### Collecting Bechdel test movie list
 The Bechdel test movie list and their Bechdel scores are collected from http://bechdeltest.com/. We used the given API to return all the site's movie list using Python.
 
 **NOTE:** Based on the API documentation, the owner requests any user to query the `getAllMovies` method as little as possible due to a shared hosting plan.
@@ -35,6 +35,7 @@ We use the TMDB API to collect the top popular movies of each year along with th
 ***This product uses the TMDB API but is not endorsed or certified by TMDB.***
 
 ## Configure cloud resources using Terraform
+
 
 ## Setting up workflow orchestrator and deployments
 
