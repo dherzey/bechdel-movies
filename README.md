@@ -38,6 +38,7 @@ We use the TMDB API to collect the top popular movies of each year along with th
 
 
 ## Setting up workflow orchestrator and deployments
+A virtual environment was created using Python to contain all necessary packages for deploying through Prefect.
 
 ## Loading data from source to GCS
 

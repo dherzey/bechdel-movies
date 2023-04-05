@@ -10,7 +10,7 @@ import requests
 import pandas as pd
 
 
-def get_bechdel_list():
+def get_bechdel_data():
     """
     Uses the bechdeltest.com API to collect the list of
     movies with and their Bechdel score.
@@ -31,7 +31,12 @@ def get_bechdel_list():
 
 def get_imdb_data(chunksize=500_000):
     """
-    Reads movie datasets from IMDB
+    Reads movie datasets from IMDB. The following are 
+    the datasets to be read:
+        - title.basics.tsv.gz
+        - title.principals.tsv.gz
+        - title.crew.tsv.gz
+        - title.ratings.tsv.gz
 
     Arguments:
         chunksize: number of rows to read per iteration
@@ -40,16 +45,35 @@ def get_imdb_data(chunksize=500_000):
         Dataframe of IMDB movie data
     """
 
-    url = 'https://datasets.imdbws.com/title.basics.tsv.gz'
-    imdb_titles = pd.read_csv(url,
-                              chunksize=chunksize,
-                              iterator=True,
-                              sep='\t',
-                              header=0)
-    
-    return imdb_titles
+    datasets = ['title.basics.tsv.gz',
+                'title.principals.tsv.gz',
+                'title.crew.tsv.gz',
+                'title.ratings.tsv.gz']
 
+    for dataset in datasets:
+        filename = dataset.replace('.tsv.gz','')
 
-if __name__=="__main__":
+        count = 0
+        while True:
+            try:
+                count += 1
+                url = f'https://datasets.imdbws.com/{dataset}'
 
-    get_bechdel_list()
+                data = pd.read_csv( url,
+                                    chunksize=chunksize,
+                                    iterator=True,
+                                    sep='\t',
+                                    header=0 )
+                
+                data_part = next(data)
+
+                #change format and data type of tconst
+                data_part['tconst'] = data_part['tconst'].str\
+                                                            .replace('tt','')\
+                                                            .astype(int)
+
+                data_part.to_csv(f"{filename}_part{count}.csv",
+                                    index=False)
+            
+            except StopIteration:
+                break
