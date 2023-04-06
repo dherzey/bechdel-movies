@@ -1,5 +1,5 @@
 locals {
-  data_lake_bucket = "dtc_data_lake"
+  data_lake_bucket = "bechdel-project_raw-storage"
 }
 
 variable "project" {
