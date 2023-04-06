@@ -5,8 +5,6 @@ import pandas as pd
 from pathlib import Path
 from prefect import task, flow
 from google.cloud import storage
-from datetime import timedelta
-from prefect.tasks import task_input_hash
 from prefect_gcp.cloud_storage import GcsBucket
 
 import sys
@@ -19,6 +17,12 @@ from scrape_oscars_db import *
 def df_to_gcs(df, path, format, block_name):
     """
     Upload dataframe to the storage bucket
+
+    Arguments:
+        - df: dataframe to be uploaded
+        - path: storage bucket path to upload file
+        - format: file format of the dataframe
+        - block_name: name of the Prefect block for gcs
     """
 
     storage.blob._MAX_MULTIPART_SIZE = 5 * 1024 * 1024  # 5 MB
@@ -28,8 +32,7 @@ def df_to_gcs(df, path, format, block_name):
     gcs_block.upload_from_dataframe(df, path, format)
 
 
-@task(log_prints=True, retries=3, cache_key_fn=task_input_hash, 
-      cache_expiration=timedelta(hours=2), description="Get Oscars data")
+@task(log_prints=True, retries=3, description="Get Oscars data")
 def get_oscars_data():
     """
     Uses the two functions found in scrape_oscars_db to
