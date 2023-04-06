@@ -11,6 +11,16 @@ sys.path.append("../bechdel-movies-project/scraper")
 from scrape_oscars_db import *
 
 
+@task(log_prints=True)
+def df_to_gcs(df, path, format, block_name):
+    """
+    Upload dataframe to the storage bucket
+    """
+
+    gcs_block = GcsBucket.load(block_name)
+    gcs_block.upload_from_dataframe(df, path, format)
+
+
 @task(log_prints=True, retries=3)
 def get_oscars_data():
     """
@@ -24,7 +34,6 @@ def get_oscars_data():
 
     results_df = extract_oscar_results(page_source)
     print("DONE: Extracted needed elements from HTML")
-    print("DONE: Data formatted as a structured dataframe\n")
 
     return results_df
 
@@ -49,9 +58,9 @@ def get_bechdel_data():
     return df
 
 
-def get_imdb_data(dataset, chunksize=500_000):
+def get_imdb_data(dataset, chunksize=100_000):
     """
-    Reads movie datasets from IMDB's site:
+    Reads movie datasets in chunks from IMDB's site:
     https://datasets.imdbws.com/.
 
     The following are some examples of the datasets 
@@ -66,10 +75,8 @@ def get_imdb_data(dataset, chunksize=500_000):
         chunksize: number of rows to read per iteration
     
     Returns:
-        Dataframe of IMDB movie data by chunks
+        Dataframe of IMDB movie data in chunks
     """
-
-    filename = dataset.replace('.tsv.gz','')
 
     url = f'https://datasets.imdbws.com/{dataset}'
 
@@ -79,19 +86,68 @@ def get_imdb_data(dataset, chunksize=500_000):
                         sep='\t',
                         header=0 )
     
-    return data, filename
-            
+    return data
+
 
 @task(log_prints=True)
-def write_gcs(path, block_name):
+def transform_imdb_data(df):
     """
-    Upload file from path to the indicated bucket
+    Transform the format or change the datatype of
+    some columns in the IMDB dataframe
+
+    Arguments:
+        df: the IMDB dataframe
+
+    Returns:
+        Transformed IMDB dataframe
     """
-    gcs_block = GcsBucket.load(block_name)
-    gcs_block.upload_from_path(from_path=f"{path}",to_path=path)
+    
+    df['tconst'] = df['tconst'].str\
+                               .replace('tt','')\
+                               .astype(int)
+    
+    return df
 
 
 @flow()
-def load_to_gcs():
+def etl_load_to_gcs(block_name):
 
-    return
+    #get and upload oscars data
+    oscars_data = get_oscars_data()
+    path = Path("oscars/oscars_awards.csv")
+    df_to_gcs(oscars_data, path, 'csv', block_name)
+
+    #get and upload bechdel test movies data
+    bechdel_data = get_bechdel_data()
+    path = Path("bechdel/bechdel_test_movies.csv")
+    df_to_gcs(bechdel_data, path, 'csv', block_name)
+
+    #get and upload imdb datasets in chunks
+    datasets = ['title.basics.tsv.gz',
+                'title.principals.tsv.gz',
+                'title.crew.tsv.gz',
+                'title.ratings.tsv.gz']
+    
+    # for dataset in datasets:
+    dataset = 'title.basics.tsv.gz'
+    filename = dataset.replace('.tsv.gz','').replace('.','_')
+    imdb_data = get_imdb_data(dataset)
+
+    count = 0
+    while True:
+        try:
+            count += 1                
+            chunk_data = next(imdb_data)
+            chunk_data = transform_imdb_data(chunk_data)
+
+            # load dataframe to GCS
+            path = Path(f"imdb/{filename}/{filename}_part{count:02}.parquet")
+            df_to_gcs(chunk_data, path, 'parquet', block_name)
+        
+        except StopIteration:
+            break
+
+
+if __name__=="__main__":
+    
+    etl_load_to_gcs('zoom-gcs')
