@@ -3,6 +3,7 @@ import requests
 import pandas as pd
 from pathlib import Path
 from prefect import task, flow
+from google.cloud import storage
 from prefect_gcp.cloud_storage import GcsBucket
 
 import sys
@@ -16,6 +17,9 @@ def df_to_gcs(df, path, format, block_name):
     """
     Upload dataframe to the storage bucket
     """
+
+    storage.blob._MAX_MULTIPART_SIZE = 5 * 1024 * 1024  # 5 MB
+    storage.blob._DEFAULT_CHUNKSIZE = 5 * 1024 * 1024  # 5 MB
 
     gcs_block = GcsBucket.load(block_name)
     gcs_block.upload_from_dataframe(df, path, format)
@@ -58,6 +62,7 @@ def get_bechdel_data():
     return df
 
 
+@task(log_prints=True)
 def get_imdb_data(dataset, chunksize=100_000):
     """
     Reads movie datasets in chunks from IMDB's site:
@@ -106,48 +111,62 @@ def transform_imdb_data(df):
                                .replace('tt','')\
                                .astype(int)
     
+    if 'isAdult' in df.columns:
+        df['isAdult'] = df['isAdult'].astype(int)
+    else:
+        pass
+    
     return df
 
 
 @flow()
 def etl_load_to_gcs(block_name):
+    """
+    Primary workflow for extraction and loading of data.
+    All collected data are placed into dataframes that
+    will be uploaded to Google Cloud Storage.
 
-    #get and upload oscars data
-    oscars_data = get_oscars_data()
-    path = Path("oscars/oscars_awards.csv")
-    df_to_gcs(oscars_data, path, 'csv', block_name)
+    Arguments:
+        block_name: name of prefect block for gcs bucket
 
-    #get and upload bechdel test movies data
-    bechdel_data = get_bechdel_data()
-    path = Path("bechdel/bechdel_test_movies.csv")
-    df_to_gcs(bechdel_data, path, 'csv', block_name)
+    Returns:
+        None
+    """
+
+    # #get and upload oscars data
+    # oscars_data = get_oscars_data()
+    # path = Path("oscars/oscars_awards.csv")
+    # df_to_gcs(oscars_data, path, 'csv', block_name)
+
+    # #get and upload bechdel test movies data
+    # bechdel_data = get_bechdel_data()
+    # path = Path("bechdel/bechdel_test_movies.csv")
+    # df_to_gcs(bechdel_data, path, 'csv', block_name)
 
     #get and upload imdb datasets in chunks
     datasets = ['title.basics.tsv.gz',
-                'title.principals.tsv.gz',
-                'title.crew.tsv.gz',
+                # 'title.principals.tsv.gz',
+                # 'title.crew.tsv.gz',
                 'title.ratings.tsv.gz']
     
-    # for dataset in datasets:
-    dataset = 'title.basics.tsv.gz'
-    filename = dataset.replace('.tsv.gz','').replace('.','_')
-    imdb_data = get_imdb_data(dataset)
+    for dataset in datasets:
+        filename = dataset.replace('.tsv.gz','').replace('.','_')
+        imdb_data = get_imdb_data(dataset)
 
-    count = 0
-    while True:
-        try:
-            count += 1                
-            chunk_data = next(imdb_data)
-            chunk_data = transform_imdb_data(chunk_data)
+        count = 0
+        while True:
+            try:
+                count += 1                
+                chunk_data = next(imdb_data)
+                chunk_data = transform_imdb_data(chunk_data)
 
-            # load dataframe to GCS
-            path = Path(f"imdb/{filename}/{filename}_part{count:02}.parquet")
-            df_to_gcs(chunk_data, path, 'parquet', block_name)
-        
-        except StopIteration:
-            break
+                # load dataframe to GCS
+                main = f"imdb/{filename}/{filename}"
+                path = Path(f"{main}_part{count:02}.parquet")
+                df_to_gcs(chunk_data, path, 'parquet', block_name)            
+            except StopIteration:
+                break
 
 
-if __name__=="__main__":
-    
+if __name__=="__main__":   
     etl_load_to_gcs('zoom-gcs')

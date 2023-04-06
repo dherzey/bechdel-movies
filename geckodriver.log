@@ -79,3 +79,18 @@ JavaScript warning: https://awardsdatabase.oscars.org/Scripts/jquery-1.10.2.min.
 Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
 Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
 console.error: "Error during quit-application-granted: [Exception... \"File error: Not found\"  nsresult: \"0x80520012 (NS_ERROR_FILE_NOT_FOUND)\"  location: \"JS frame :: resource:///modules/BrowserGlue.jsm :: _onQuitApplicationGranted/tasks< :: line 1996\"  data: no]"
+1680769194396	geckodriver	INFO	Listening on 127.0.0.1:49177
+1680769195103	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--ignore-certificate-errors" "--incognito" "--headless" "--remote-debugging-port" "45897" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilew8otTQ"
+*** You are running in headless mode.
+1680769195942	Marionette	INFO	Marionette enabled
+1680769195951	Marionette	INFO	Listening on port 35831
+WebDriver BiDi listening on ws://localhost:45897
+Read port: 35831
+1680769196191	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilew8otTQ/search.json.mozlz4", (void 0)))
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
+DevTools listening on ws://localhost:45897/devtools/browser/afdab24d-3d2a-419d-bdd9-1c32ab046790
+JavaScript warning: https://awardsdatabase.oscars.org/Scripts/jquery-1.10.2.min.js?~v=VfbFXC2P374xjYDYKPikYDMhsk_Iu5U6EKDQ3rMBkqw1, line 19: Using //@ to indicate sourceMappingURL pragmas is deprecated. Use //# instead
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://awardsdatabase.oscars.org"
