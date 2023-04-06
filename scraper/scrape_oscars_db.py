@@ -1,5 +1,6 @@
 """----------------------------------------------------------------------
 Script for web scraping data in the Oscar Academy Awards database
+
 Last modified: March 2023
 ----------------------------------------------------------------------"""
 

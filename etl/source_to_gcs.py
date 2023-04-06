@@ -1,3 +1,9 @@
+"""----------------------------------------------------------------------
+Script for loading dataframes from the source to Google Cloud Storage
+
+Last modified: April 2023
+----------------------------------------------------------------------"""
+
 import io
 import time
 import requests
@@ -69,8 +75,8 @@ def get_bechdel_data():
     return df
 
 
-# @task(log_prints=True, description="Get IMDB data")
-def get_imdb_data(dataset, chunksize=50_000):
+@task(log_prints=True, description="Get IMDB data")
+def get_imdb_data(datasets, chunksize):
     """
     Reads movie datasets in chunks from IMDB's site:
     https://datasets.imdbws.com/.
@@ -83,22 +89,28 @@ def get_imdb_data(dataset, chunksize=50_000):
         - title.ratings.tsv.gz
 
     Arguments:
-        dataset: IMDB dataset to be read
-        chunksize: number of rows to read per iteration
+        dataset: a list of IMDB datasets to be read
+        chunksize: number of rows to read per iteration.
     
     Returns:
         Dataframe of IMDB movie data in chunks
     """
 
-    url = f'https://datasets.imdbws.com/{dataset}'
-
-    data = pd.read_csv( url,
-                        chunksize=chunksize,
-                        iterator=True,
-                        sep='\t',
-                        header=0 )
+    collection = []
     
-    return data
+    for dataset in datasets:
+
+        url = f'https://datasets.imdbws.com/{dataset}'
+
+        data = pd.read_csv( url,
+                            chunksize=chunksize,
+                            iterator=True,
+                            sep='\t',
+                            header=0 )  
+        
+        collection.append(data) 
+
+    return collection  
 
 
 @task(log_prints=True, description="Transform dataframe")
@@ -133,38 +145,47 @@ def transform_imdb_data(df):
 
 
 @flow(name="Subflow for IMDB ingestion")
-def imdb_data_flow(dataset, block_name):
+def imdb_data_flow(block_name, chunksize=50_000):
     """
     Subflow which contain the main IMDB tasks
 
     Arguments:
-        - dataset: IMDB dataset to load
         - block_name: name of Prefect block for GCS bucket
+        - chunksize: number of rows to read per iteration.
+                     Default set to 50,000 rows.
 
     Returns:
         None
     """
 
-    filename = dataset.replace('.tsv.gz','').replace('.','_')
-    imdb_data = get_imdb_data(dataset)
+    datasets = ['title.basics.tsv.gz',
+                'title.principals.tsv.gz',
+                'title.crew.tsv.gz',
+                'title.ratings.tsv.gz']
 
-    count = 0
-    while True:
-        try:
-            count += 1                
-            chunk_data = next(imdb_data)
-            chunk_data = transform_imdb_data(chunk_data)
+    imdb_collection = get_imdb_data(datasets, chunksize)
 
-            #load dataframe to GCS
-            main = f"imdb/{filename}/{filename}"
-            path = Path(f"{main}_part{count:02}.parquet")
-            df_to_gcs(chunk_data, path, 'parquet', block_name)   
+    for imdb_data, dataset in zip(imdb_collection, datasets):
+        
+        filename = dataset.replace('.tsv.gz','').replace('.','_')
 
-            #delay next iteration
-            time.sleep(5)
+        count = 0
+        while True:
+            try:
+                count += 1                
+                chunk_data = next(imdb_data)
+                chunk_data = transform_imdb_data(chunk_data)
 
-        except StopIteration:
-            break
+                #load dataframe to GCS
+                main = f"imdb/{filename}/{filename}"
+                path = Path(f"{main}_part{count:02}.parquet")
+                df_to_gcs(chunk_data, path, 'parquet', block_name)   
+
+                #delay next iteration
+                time.sleep(5)
+
+            except StopIteration:
+                break
 
 
 @flow(name="Load data to GCS")
@@ -175,7 +196,7 @@ def etl_load_to_gcs(block_name):
     will be uploaded to Google Cloud Storage.
 
     Arguments:
-        block_name: name of prefect block for gcs bucket
+        block_name: name of Prefect block for GCS bucket
 
     Returns:
         None
@@ -192,13 +213,7 @@ def etl_load_to_gcs(block_name):
     df_to_gcs(bechdel_data, path, 'csv', block_name)
 
     #get and upload imdb datasets in chunks
-    datasets = ['title.basics.tsv.gz',
-                'title.principals.tsv.gz',
-                'title.crew.tsv.gz',
-                'title.ratings.tsv.gz']
-    
-    for dataset in datasets:
-        imdb_data_flow(dataset, block_name)  
+    imdb_data_flow(block_name)  
 
 
 if __name__=="__main__":   
