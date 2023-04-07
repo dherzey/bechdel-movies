@@ -173,7 +173,7 @@ def get_tmdb_data(API_KEY, from_year=1874, to_year=None, delay=5):
         #delay next request
         time.sleep(delay)
 
-        if index % 50 == 0:
+        if (index % 50 == 0) and (index != 0):
             print("Delaying for another 25 seconds...")
             time.sleep(25)
 

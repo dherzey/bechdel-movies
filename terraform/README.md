@@ -16,7 +16,7 @@ export GOOGLE_APPLICATION_CREDENTIALS="<path/to/your/service-account-authkeys>.j
 gcloud auth application-default login
 ```
 
-The following are the execution steps to run this folder in Terraform:
+Finally, the following are the execution steps to run this folder in Terraform:
 
 1. `terraform init`: initialize and configure backend
 2. `terraform plan`: previews changes and proposes execution plan
