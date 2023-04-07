@@ -35,7 +35,7 @@ We use the TMDB API to collect the top popular movies of each year along with th
 <img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_long_2-9665a76b1ae401a510ec1e0ca40ddcb3b0cfe45f1d51b77a308fea0845885648.svg" alt="TMDB logo" style="height: 50px; width:150px"/>
 
 ## Configure cloud resources using Terraform
-Resources are configured and provisioned using Terraform. This would create a Google Cloud Storage bucket and a BigQuery dataset in the indicated GCP project. See [Terraform folder]((https://github.com/dherzey/bechdel-movies-project/blob/main/terraform) for more info.
+Resources are configured and provisioned using Terraform. This would create a Google Cloud Storage bucket and a BigQuery dataset in the indicated GCP project. See [Terraform folder](https://github.com/dherzey/bechdel-movies-project/blob/main/terraform) for more info.
 
 ## Setting up workflow orchestrator and deployments
 A virtual environment was created using Python to contain all necessary packages for deploying through Prefect.
