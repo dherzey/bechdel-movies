@@ -1,3 +1,7 @@
 data/
 project-venv/
+keys/
+terraform/
+!terraform/*.tf
+!terraform/*.md
 *.cfg
