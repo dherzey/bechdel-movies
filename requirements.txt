@@ -10,3 +10,4 @@ sqlalchemy
 lxml
 beautifulsoup4
 selenium
+dbt-bigquery
