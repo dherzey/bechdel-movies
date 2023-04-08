@@ -6,8 +6,7 @@ files according to their order. Make sure that all packages found in
 requirement.txt are installed.
 
 NOTE: To make this file executable, please run the following command:
-        chmod +x ./etl/run.sh
-Change the above path to this file as necessary.
+        chmod +x run_etl.sh
 
 Last modified: April 2023
 ----------------------------------------------------------------------"""
