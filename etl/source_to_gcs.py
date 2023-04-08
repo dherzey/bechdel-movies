@@ -4,7 +4,9 @@ Script for loading dataframes from the source to Google Cloud Storage
 Last modified: April 2023
 ----------------------------------------------------------------------"""
 
+import os
 import io
+import sys
 import time
 import requests
 import pandas as pd
@@ -12,10 +14,10 @@ from pathlib import Path
 from prefect import task, flow
 from prefect_gcp.cloud_storage import GcsBucket
 
-import sys
-sys.path.append("../bechdel-movies-project/scraper")
+path = os.path.join(os.getcwd(), "scraper")
+sys.path.extend([path, os.getcwd()])
 
-from scrape_oscars_db import *
+from scrape_oscars_db import scrape_oscars_data, extract_oscar_results
 
 
 @task(log_prints=True, description="Upload dataframe to GCS")

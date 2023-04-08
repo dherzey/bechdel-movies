@@ -6,12 +6,14 @@ through the host machine.
 Last modified: April 2023
 ----------------------------------------------------------------------"""
 
+import os
+import sys
 from prefect.deployments import Deployment
 from prefect_github import GitHubRepository
 from prefect.server.schemas.schedules import CronSchedule
 
-import sys
-sys.path.append("../bechdel-movies-project/etl")
+path = os.path.join(os.getcwd(), "etl")
+sys.path.extend([path, os.getcwd()])
 
 from source_to_gcs import etl_load_to_gcs
 from gcs_to_bigquery import etl_load_to_bq
