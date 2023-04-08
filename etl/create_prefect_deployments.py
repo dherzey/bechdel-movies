@@ -12,8 +12,9 @@ from prefect.deployments import Deployment
 from prefect_github import GitHubRepository
 from prefect.server.schemas.schedules import CronSchedule
 
-path = os.path.join(os.getcwd(), "etl")
-sys.path.extend([path, os.getcwd()])
+# path = os.path.join(os.getcwd(), "etl")
+# sys.path.extend([path, os.getcwd()])
+sys.path.insert(0, os.getcwd())
 
 from etl.source_to_gcs import etl_load_to_gcs
 from etl.gcs_to_bigquery import etl_load_to_bq
