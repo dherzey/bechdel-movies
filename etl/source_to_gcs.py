@@ -185,7 +185,7 @@ def imdb_data_flow(block_name, chunksize=50_000):
 
 
 @flow(name="source-to-gcs")
-def etl_load_to_gcs(block_name):
+def etl_load_to_gcs(block_name = 'bechdel-project-gcs'):
     """
     Primary workflow for extraction and loading of data.
     All collected data are placed into dataframes that
@@ -213,4 +213,4 @@ def etl_load_to_gcs(block_name):
 
 
 if __name__=="__main__":   
-    etl_load_to_gcs('bechdel-project-gcs')
+    etl_load_to_gcs()

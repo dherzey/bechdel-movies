@@ -33,7 +33,7 @@ def deploy_flow(github_block_name, flow, deploy_name, cron):
     """
 
     repo = GitHubRepository.load(github_block_name)
-
+    
     deploy = Deployment.build_from_flow(
         flow = flow,
         name = deploy_name,
