@@ -1,5 +1,6 @@
 """----------------------------------------------------------------------
-Script for creating Prefect blocks for the project using Python
+Script for creating Prefect blocks for the project using Python. Blocks
+will contain connection info for cloud resources and repo.
 
 Last modified: April 2023
 ----------------------------------------------------------------------"""

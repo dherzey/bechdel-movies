@@ -1,7 +1,7 @@
 """----------------------------------------------------------------------
-Script for deploying Prefect workflows using Python. This will look for
-the script in the Github repo, read it and run it through the host
-machine.
+Script for creating deployments for Prefect workflows using Python. 
+This will look for the script in the Github repo, read it and run it 
+through the host machine.
 
 Last modified: April 2023
 ----------------------------------------------------------------------"""
