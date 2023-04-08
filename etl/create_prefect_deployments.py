@@ -6,17 +6,17 @@ through the host machine.
 Last modified: April 2023
 ----------------------------------------------------------------------"""
 
-# import os
-# import sys
+import os
+import sys
 from prefect.deployments import Deployment
 from prefect_github import GitHubRepository
 from prefect.server.schemas.schedules import CronSchedule
 
-# path = os.path.join(os.getcwd(), "etl")
-# sys.path.extend([path, os.getcwd()])
+path = os.path.join(os.getcwd(), "etl")
+sys.path.extend([path, os.getcwd()])
 
-from source_to_gcs import etl_load_to_gcs
-from gcs_to_bigquery import etl_load_to_bq
+from etl.source_to_gcs import etl_load_to_gcs
+from etl.gcs_to_bigquery import etl_load_to_bq
 
 
 def deploy_flow(github_block_name, flow, deploy_name, cron):
