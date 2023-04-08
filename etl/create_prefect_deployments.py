@@ -14,6 +14,7 @@ import sys
 sys.path.append("../bechdel-movies-project/etl")
 
 from source_to_gcs import etl_load_to_gcs
+from gcs_to_bigquery import etl_load_to_bq
 
 
 def deploy_flow(github_block_name, flow, deploy_name, cron):
@@ -52,3 +53,9 @@ if __name__=="__main__":
                 etl_load_to_gcs, 
                 "bechdel-etl-gcs-dep",
                 "0 0 1 * *")
+    
+    # loading to GCS will run every second day of the month
+    deploy_flow(github_block_name, 
+                etl_load_to_bq, 
+                "bechdel-etl-bq-dep",
+                "0 0 2 * *")

@@ -1,7 +1,7 @@
 pandas
 prefect
 prefect-sqlalchemy
-prefect-gcp[cloud_storage]
+prefect-gcp
 prefect-github
 protobuf
 pyarrow

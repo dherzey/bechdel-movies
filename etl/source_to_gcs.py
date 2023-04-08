@@ -10,7 +10,6 @@ import requests
 import pandas as pd
 from pathlib import Path
 from prefect import task, flow
-from google.cloud import storage
 from prefect_gcp.cloud_storage import GcsBucket
 
 import sys
@@ -30,9 +29,6 @@ def df_to_gcs(df, path, format, block_name):
         - format: file format of the dataframe
         - block_name: name of the Prefect block for gcs
     """
-
-    storage.blob._MAX_MULTIPART_SIZE = 5 * 1024 * 1024  # 5 MB
-    storage.blob._DEFAULT_CHUNKSIZE = 5 * 1024 * 1024  # 5 MB
 
     gcs_block = GcsBucket.load(block_name)
     gcs_block.upload_from_dataframe(df, path, format)
@@ -144,7 +140,7 @@ def transform_imdb_data(df):
     return df
 
 
-@flow(name="IMDB ingestion")
+@flow(name="IMDB-data-ingestion")
 def imdb_data_flow(block_name, chunksize=50_000):
     """
     Subflow which contain the main IMDB tasks
@@ -188,7 +184,7 @@ def imdb_data_flow(block_name, chunksize=50_000):
                 break
 
 
-@flow(name="Source to GCS")
+@flow(name="source-to-gcs")
 def etl_load_to_gcs(block_name):
     """
     Primary workflow for extraction and loading of data.

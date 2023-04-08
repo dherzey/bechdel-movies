@@ -10,3 +10,12 @@ Last modified: April 2023
 
 import os
 
+
+# create blocks
+os.system("python3 etl/create_prefect_blocks.py")
+
+# create deployments
+os.system("python3 etl/create_prefect_deployments.py")
+
+# start prefect agent
+os.system("prefect agent start -q default")
