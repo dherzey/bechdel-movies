@@ -40,7 +40,23 @@ We use the TMDB API to collect the top popular movies of each year along with th
 Resources are configured and provisioned using Terraform. This would create a Google Cloud Storage bucket and a BigQuery dataset in the indicated GCP project. See [Terraform folder](https://github.com/dherzey/bechdel-movies-project/blob/main/terraform) for more info.
 
 ## Setting up workflow orchestrator and deployments
-A virtual environment was created using Python to contain all necessary packages for deploying through Prefect.
+
+### Create virtual environment
+A virtual environment was first created using Python to contain all necessary packages for deploying through Prefect along with other packages for scraping and modelling data (`dbt-bigquery`). See [requirements.txt](https://github.com/dherzey/bechdel-movies-project/blob/main/requirements.txt) for the full list of packages.
+
+```bash
+# install virtualenv
+pip install virtualenv
+
+# create virtual environment named project-venv
+python3 -m venv project-venv
+
+# activate virtual environment
+source ./project-venv/bin/activate
+```
+
+### Workflows
+The Python files under the [etl folder](https://github.com/dherzey/bechdel-movies-project/blob/main/etl) contains the scripts for the whole workflow. It started with creating all the necessary Prefect blocks and deployments before running the scripts for extraction and loading to GCS and BigQuery.
 
 ## Loading data from source to GCS
 
