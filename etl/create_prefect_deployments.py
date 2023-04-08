@@ -8,6 +8,7 @@ Last modified: April 2023
 
 from prefect.deployments import Deployment
 from prefect_github import GitHubRepository
+from prefect.server.schemas.schedules import CronSchedule
 
 import sys
 sys.path.append("../bechdel-movies-project/etl")
@@ -15,7 +16,7 @@ sys.path.append("../bechdel-movies-project/etl")
 from source_to_gcs import etl_load_to_gcs
 
 
-def deploy_flow(github_block_name, flow, deploy_name):
+def deploy_flow(github_block_name, flow, deploy_name, cron):
     """
     Create a Prefect deployment from flow. This uses the
     created Github block to read all scripts to be run.
@@ -24,6 +25,7 @@ def deploy_flow(github_block_name, flow, deploy_name):
         - github_block_name: name of the Github block
         - flow: the flow function to be deployed
         - deploy_name: name of the deployment
+        - cron: deployment schedule in cron format
 
     Returns:
         None
@@ -34,7 +36,8 @@ def deploy_flow(github_block_name, flow, deploy_name):
     deploy = Deployment.build_from_flow(
         flow = flow,
         name = deploy_name,
-        storage = repo
+        storage = repo,
+        schedule = CronSchedule(cron=cron, timezone="UTC")
     )
 
     deploy.apply()
@@ -44,6 +47,8 @@ if __name__=="__main__":
 
     github_block_name = "bechdel-project-github"
 
+    # loading to GCS will run every first day of the month
     deploy_flow(github_block_name, 
                 etl_load_to_gcs, 
-                "bechdel-etl-gcs-dep")
+                "bechdel-etl-gcs-dep",
+                "0 0 1 * *")

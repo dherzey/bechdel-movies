@@ -144,7 +144,7 @@ def transform_imdb_data(df):
     return df
 
 
-@flow(name="Subflow for IMDB ingestion")
+@flow(name="IMDB ingestion")
 def imdb_data_flow(block_name, chunksize=50_000):
     """
     Subflow which contain the main IMDB tasks
@@ -188,7 +188,7 @@ def imdb_data_flow(block_name, chunksize=50_000):
                 break
 
 
-@flow(name="Load data to GCS")
+@flow(name="Source to GCS")
 def etl_load_to_gcs(block_name):
     """
     Primary workflow for extraction and loading of data.
