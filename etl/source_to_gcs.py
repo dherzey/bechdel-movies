@@ -217,4 +217,4 @@ def etl_load_to_gcs(block_name):
 
 
 if __name__=="__main__":   
-    etl_load_to_gcs('zoom-gcs')
+    etl_load_to_gcs('bechdel-project-gcs')

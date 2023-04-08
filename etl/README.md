@@ -1,6 +1,5 @@
-## Loading of data from source to destination
-Ingestion will use Prefect to orchestrate ETL flows.
+## Create Prefect blocks
 
-### Loading from source to Google Cloud Storage
+## Loading from source to Google Cloud Storage
 
-### Loading from storage to BigQuery
+## Loading from storage to BigQuery

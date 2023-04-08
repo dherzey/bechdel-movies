@@ -73,12 +73,12 @@ def create_github_block(repo_url, block_name):
 
 if __name__=="__main__":
 
-    service_key_path = "../keys/project_service_key.json"
+    service_key_path = "~/Documents/bechdel-movies-project/keys/project_service_key.json"
     gcp_cred_block = create_gcp_cred_block(service_key_path, 
-                                           "bechdel-project_gcp-cred")
+                                           "bechdel-project-gcp-cred")
     
     bucket_name = "bechdel_project-data_lake"
-    create_gcs_bucket(gcp_cred_block, bucket_name)
+    create_gcs_bucket(gcp_cred_block, bucket_name, "bechdel-project-gcs")
 
     repo_url = "https://github.com/dherzey/bechdel-movies-project.git"
-    create_github_block(repo_url, "bechdel-project_github")
+    create_github_block(repo_url, "bechdel-project-github")

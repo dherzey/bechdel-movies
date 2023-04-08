@@ -37,7 +37,7 @@ We use the TMDB API to collect the top popular movies of each year along with th
 <img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_long_2-9665a76b1ae401a510ec1e0ca40ddcb3b0cfe45f1d51b77a308fea0845885648.svg" alt="TMDB logo" style="height: 50px; width:150px"/>
 
 ## Configure cloud resources using Terraform
-Resources are configured and provisioned using Terraform. This would create a Google Cloud Storage bucket and a BigQuery dataset in the indicated GCP project. See [Terraform folder](https://github.com/dherzey/bechdel-movies-project/blob/main/terraform) for more info.
+Resources are configured and provisioned using Terraform. This would need GCP service account credentials in order to create a Google Cloud Storage bucket and a BigQuery dataset in the indicated GCP project. See [Terraform folder](https://github.com/dherzey/bechdel-movies-project/blob/main/terraform) for more info.
 
 ## Setting up workflow orchestrator and deployments
 
@@ -56,7 +56,12 @@ source ./project-venv/bin/activate
 ```
 
 ### Workflows
-The Python files under the [etl folder](https://github.com/dherzey/bechdel-movies-project/blob/main/etl) contains the scripts for the whole workflow. It started with creating all the necessary Prefect blocks and deployments before running the scripts for extraction and loading to GCS and BigQuery.
+The Python files under the [etl folder](https://github.com/dherzey/bechdel-movies-project/blob/main/etl) contains the scripts for the whole workflow. The following Prefect blocks are necessary to be created:
+- Google Cloud Platform credentials block: this will need a service account key for the project
+- Google Cloud Storage bucket block: this uses info from the credentials block to connect to the bucket
+- Github Repository block: this needs the HTTPS of the Github repo where all the scripts are located. The default is set to this repository (https://github.com/dherzey/bechdel-movies-project.git)
+
+Using these blocks, we can create Prefect deployments that will run the workflows for the extraction and loading of data to GCS and BigQuery. See more info in the [etl folder](https://github.com/dherzey/bechdel-movies-project/blob/main/etl).
 
 ## Loading data from source to GCS
 
