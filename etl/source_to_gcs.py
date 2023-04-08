@@ -5,7 +5,6 @@ Last modified: April 2023
 ----------------------------------------------------------------------"""
 
 import io
-import sys
 import time
 import requests
 import pandas as pd
@@ -13,7 +12,8 @@ from pathlib import Path
 from prefect import task, flow
 from prefect_gcp.cloud_storage import GcsBucket
 
-sys.path.append("../bechdel-movies-project/scraper")
+import sys
+sys.path.append("./scraper")
 from scrape_oscars_db import scrape_oscars_data, extract_oscar_results
 
 
