@@ -157,7 +157,7 @@ def imdb_data_flow(block_name):
     """
 
     imdb_files = {
-        'title.basics.tsv.gz': 50_000,
+        # 'title.basics.tsv.gz': 50_000,
         'title.crew.tsv.gz': 100_000,
         'title.ratings.tsv.gz': 100_000,
         'title.principals.tsv.gz': 200_000
@@ -200,15 +200,15 @@ def etl_load_to_gcs(block_name = 'bechdel-project-gcs'):
         None
     """
 
-    #get and upload oscars data
-    oscars_data = get_oscars_data()
-    path = Path("oscars/oscars_awards.csv")
-    df_to_gcs(oscars_data, path, 'csv', block_name)
+    # #get and upload oscars data
+    # oscars_data = get_oscars_data()
+    # path = Path("oscars/oscars_awards.csv")
+    # df_to_gcs(oscars_data, path, 'csv', block_name)
 
-    #get and upload bechdel test movies data
-    bechdel_data = get_bechdel_data()
-    path = Path("bechdel/bechdel_test_movies.csv")
-    df_to_gcs(bechdel_data, path, 'csv', block_name)
+    # #get and upload bechdel test movies data
+    # bechdel_data = get_bechdel_data()
+    # path = Path("bechdel/bechdel_test_movies.csv")
+    # df_to_gcs(bechdel_data, path, 'csv', block_name)
 
     #get and upload imdb datasets in chunks
     imdb_data_flow(block_name)  
