@@ -11,12 +11,12 @@ from prefect_gcp.bigquery import bigquery_load_cloud_storage
 
 
 @flow(name="call-bq-load", log_prints=True)
-def gcs_to_bigquery(project, uri, dataset, table, location):
+def gcs_to_bigquery(block_name, uri, dataset, table, location):
     """
     Loads raw data from GCS to BigQuery in an external table.
 
     Arguments:
-        - project: project name where the dataset is located
+        - block_name: Prefect block name for GCP credential
         - uri: GCS file path, e.g. "gs://bucket-name/..."
         - dataset: name of the BigQuery dataset
         - table: name of the BigQuery table to be created
@@ -26,7 +26,7 @@ def gcs_to_bigquery(project, uri, dataset, table, location):
         Result response of function
     """
 
-    gcp_credentials = GcpCredentials(project=project)
+    gcp_credentials = GcpCredentials.load(block_name)
     
     result = bigquery_load_cloud_storage(
                 uri = uri,
@@ -40,12 +40,12 @@ def gcs_to_bigquery(project, uri, dataset, table, location):
 
 
 @flow(name="IMDB-load-BQ", log_prints=True)
-def gcs_imdb_to_bq(project, dataset, bucket_name, location):
+def gcs_imdb_to_bq(block_name, dataset, bucket_name, location):
     """
     Subflow to load IMDB parquet files from GCS to BigQuery
 
     Arguments:
-        - project: project name where the dataset is located
+        - block_name: Prefect block name for GCP credential
         - dataset: name of the BigQuery dataset
         - bucket_name: name of the GCS bucket where the raw
                        data is stored
@@ -64,7 +64,7 @@ def gcs_imdb_to_bq(project, dataset, bucket_name, location):
     for filename in imdb_files:
         filename = "_".join(filename.split(".")[:2])
         uri = f"gs://{bucket_name}/imdb/{filename}/*.parquet"
-        gcs_to_bigquery(project = project,
+        gcs_to_bigquery(block_name = block_name,
                         uri = uri,
                         dataset = dataset,
                         table = f"imdb_{filename}_raw",
@@ -103,7 +103,7 @@ def bq_tables_partition(dataset, table, column, block_name):
 
 
 @flow(name="gcs-to-bigquery")
-def etl_load_to_bq(project = "data-projects-383009", 
+def etl_load_to_bq(gcp_block_name = "bechdel-project-gcp-cred", 
                    dataset = "bechdel_movies_project", 
                    bucket_name = "bechdel-project_data-lake",
                    location = "us-west1"):
@@ -113,7 +113,7 @@ def etl_load_to_bq(project = "data-projects-383009",
     BigQuery tables from the created external tables.
 
     Arguments:
-        - project: project name where the dataset is located
+        - gcp_block_name: Prefect block name for GCP credential
         - dataset: name of the BigQuery dataset
         - bucket_name: name of the GCS bucket where raw the
                        data is stored
@@ -126,7 +126,7 @@ def etl_load_to_bq(project = "data-projects-383009",
     
     # read and load oscars data to bigquery
     uri = f"gs://{bucket_name}/oscars/*.csv"
-    gcs_to_bigquery(project = project,
+    gcs_to_bigquery(block_name = gcp_block_name,
                     uri = uri,
                     dataset = dataset,
                     table = "oscars_raw",
@@ -134,14 +134,14 @@ def etl_load_to_bq(project = "data-projects-383009",
     
     # read and load Bechdel Test movie list
     uri = f"gs://{bucket_name}/bechdel/*.csv"
-    gcs_to_bigquery(project = project,
+    gcs_to_bigquery(block_name = gcp_block_name,
                     uri = uri,
                     dataset = dataset,
                     table = "bechdel_raw",
                     location = location)
     
     # read and load IMDB movie data
-    gcs_imdb_to_bq(project, dataset, bucket_name, location)
+    gcs_imdb_to_bq(gcp_block_name, dataset, bucket_name, location)
     
 
 if __name__=="__main__":
