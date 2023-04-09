@@ -71,7 +71,7 @@ def get_bechdel_data():
 
 
 @task(log_prints=True, description="Get IMDB data")
-def get_imdb_data(datasets, chunksize):
+def get_imdb_data(imdb_files, chunksize):
     """
     Reads movie datasets in chunks from IMDB's site:
     https://datasets.imdbws.com/.
@@ -84,8 +84,8 @@ def get_imdb_data(datasets, chunksize):
         - title.ratings.tsv.gz
 
     Arguments:
-        dataset: a list of IMDB datasets to be read
-        chunksize: number of rows to read per iteration.
+        - imdb_files: a list of IMDB datasets to be read
+        - chunksize: number of rows to read per iteration.
     
     Returns:
         Dataframe of IMDB movie data in chunks
@@ -93,16 +93,13 @@ def get_imdb_data(datasets, chunksize):
 
     collection = []
     
-    for dataset in datasets:
-
-        url = f'https://datasets.imdbws.com/{dataset}'
-
+    for filename in imdb_files:
+        url = f'https://datasets.imdbws.com/{filename}'
         data = pd.read_csv( url,
                             chunksize=chunksize,
                             iterator=True,
                             sep='\t',
                             header=0 )  
-        
         collection.append(data) 
 
     return collection  
@@ -153,16 +150,15 @@ def imdb_data_flow(block_name, chunksize=50_000):
         None
     """
 
-    datasets = ['title.basics.tsv.gz',
-                'title.principals.tsv.gz',
-                'title.crew.tsv.gz',
-                'title.ratings.tsv.gz']
+    imdb_files = ['title.basics.tsv.gz',
+                  'title.principals.tsv.gz',
+                  'title.crew.tsv.gz',
+                  'title.ratings.tsv.gz']
 
-    imdb_collection = get_imdb_data(datasets, chunksize)
+    imdb_collection = get_imdb_data(imdb_files, chunksize)
 
-    for imdb_data, dataset in zip(imdb_collection, datasets):
-        
-        filename = dataset.replace('.tsv.gz','').replace('.','_')
+    for imdb_data, filename in zip(imdb_collection, imdb_files):
+        filename = "_".join(filename.split(".")[:2])
 
         count = 0
         while True:
@@ -178,7 +174,6 @@ def imdb_data_flow(block_name, chunksize=50_000):
 
                 #delay next iteration
                 time.sleep(5)
-
             except StopIteration:
                 break
 

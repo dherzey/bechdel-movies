@@ -44,19 +44,19 @@ def gcs_imdb_to_bq(block_name, dataset, bucket_name):
         None
     """
 
-    datasets = ['title.basics.tsv.gz',
-                'title.principals.tsv.gz',
-                'title.crew.tsv.gz',
-                'title.ratings.tsv.gz']
+    imdb_files = ['title.basics.tsv.gz',
+                  'title.principals.tsv.gz',
+                  'title.crew.tsv.gz',
+                  'title.ratings.tsv.gz']
 
     # read and load IMDB data
-    for dataset in datasets:
-        dataset = "_".join(dataset.split(".")[:2])
-        uri = f"gs://{bucket_name}/imdb/{dataset}/*.parquet"
+    for filename in imdb_files:
+        filename = "_".join(filename.split(".")[:2])
+        uri = f"gs://{bucket_name}/imdb/{filename}/*.parquet"
         gcs_to_bigquery(block_name,
                         uri = uri,
                         dataset = dataset,
-                        table = f"imdb_{dataset}_raw")
+                        table = f"imdb_{filename}_raw")
 
 
 def bq_tables_partition(dataset, table, column, block_name):
