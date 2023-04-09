@@ -103,7 +103,7 @@ def bq_tables_partition(dataset, table, column, block_name):
 
 
 @flow(name="gcs-to-bigquery")
-def etl_load_to_bq(project = "data-project-383009", 
+def etl_load_to_bq(project = "data-projects-383009", 
                    dataset = "bechdel_movies_project", 
                    bucket_name = "bechdel-project_data-lake",
                    location = "us-west1"):
