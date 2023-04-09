@@ -24,13 +24,13 @@ echo "Virtual environment activated."
 # echo "Required packages installed."
 
 # create blocks
-# python3 etl/create_prefect_blocks.py
-# echo "Prefect blocks created."
+python3 etl/create_prefect_blocks.py
+echo "Prefect blocks created."
 
 # create deployments
 python3 etl/create_prefect_deployments.py
 echo "Prefect deployments created."
 
 # start Prefect agent
-# echo "Starting Prefect agent..."
-# prefect agent start -q default
+echo "Starting Prefect agent..."
+prefect agent start -q default

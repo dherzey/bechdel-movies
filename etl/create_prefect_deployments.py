@@ -88,12 +88,14 @@ if __name__=="__main__":
                 "bechdel-etl-full",
                 "0 0 1 * *")
 
-    # scrape and load data to GCS
+    # scrape and load data to GCS (usually for testing)
+    # function arguments set to default
     deploy_flow(github_block_name, 
                 etl_load_to_gcs, 
                 "bechdel-etl-gcs")
     
-    # load data from GCS to BigQuery
+    # load data from GCS to BigQuery (usually for testing)
+    # function arguments set to default
     deploy_flow(github_block_name, 
                 etl_load_to_bq, 
                 "bechdel-etl-bq")

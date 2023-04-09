@@ -88,7 +88,7 @@ if __name__=="__main__":
                                            "bechdel-project-gcp-cred")
     
     # create gcs bucket block
-    bucket_name = "bechdel_project-data_lake"
+    bucket_name = "bechdel-project_data-lake"
     create_gcs_bucket(gcp_cred_block, bucket_name, "bechdel-project-gcs")
 
     # create bigquery block
