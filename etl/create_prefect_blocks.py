@@ -83,7 +83,7 @@ def create_github_block(repo_url, block_name):
 if __name__=="__main__":
 
     # create gcp credentials block
-    service_key_path = "~/Documents/bechdel-movies-project/keys/project_service_key.json"
+    service_key_path = "~/keys/project_service_key.json"
     gcp_cred_block = create_gcp_cred_block(service_key_path, 
                                            "bechdel-project-gcp-cred")
     
