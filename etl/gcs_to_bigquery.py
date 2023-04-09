@@ -55,7 +55,7 @@ def gcs_imdb_to_bq(block_name, dataset, bucket_name, location):
         None
     """
 
-    imdb_files = ['title.basics.tsv.gz',
+    imdb_files = [#'title.basics.tsv.gz',
                   'title.principals.tsv.gz',
                   'title.crew.tsv.gz',
                   'title.ratings.tsv.gz']
@@ -118,7 +118,7 @@ def etl_load_to_bq(gcp_block_name = "bechdel-project-gcp-cred",
         - bucket_name: name of the GCS bucket where raw the
                        data is stored
         - location: dataset location (US, EU, etc.)
-        - block_name: Prefect block name for BigQuery
+        - bq_block_name: Prefect block name for BigQuery
     
     Returns:
         None
