@@ -11,14 +11,26 @@
 # Last modified: April 2023
 #--------------------------------------------------------------------------
 
+# create virtual environment
+# python3 -m venv project-venv
+# echo "Virtual environment created."
+
+# activate virtual environment
+source ./project-venv/bin/activate
+echo "Virtual environment activated."
+
+# pip install Python packages in environment
+# pip install -r requirements.txt
+# echo "Required packages installed."
+
 # create blocks
-python3 etl/create_prefect_blocks.py
-echo "Prefect blocks created."
+# python3 etl/create_prefect_blocks.py
+# echo "Prefect blocks created."
 
 # create deployments
 python3 etl/create_prefect_deployments.py
 echo "Prefect deployments created."
 
 # start Prefect agent
-echo "Starting Prefect agent..."
-prefect agent start -q default
+# echo "Starting Prefect agent..."
+# prefect agent start -q default
