@@ -4,7 +4,7 @@ from prefect_gcp.bigquery import BigQueryWarehouse
 from prefect_gcp.bigquery import bigquery_load_cloud_storage
 
 
-@task(log_prints=True)
+@flow(name="call-bq-load", log_prints=True)
 def gcs_to_bigquery(block_name, uri, dataset, table):
     """
     Loads raw data from GCS to BigQuery in an external table.
@@ -29,7 +29,7 @@ def gcs_to_bigquery(block_name, uri, dataset, table):
     )
 
 
-@flow(name="IMDB-load-BQ")
+@flow(name="IMDB-load-BQ", log_prints=True)
 def gcs_imdb_to_bq(block_name, dataset, bucket_name):
     """
     Subflow to load IMDB parquet files from GCS to BigQuery
@@ -58,7 +58,7 @@ def gcs_imdb_to_bq(block_name, dataset, bucket_name):
                         dataset = dataset,
                         table = f"imdb_{filename}_raw")
 
-
+@task(log_prints=True)
 def bq_tables_partition(dataset, table, column, block_name):
     """
     Creates new table with partitioned columns from external
@@ -76,6 +76,8 @@ def bq_tables_partition(dataset, table, column, block_name):
             """
 
     warehouse.execute(query)
+
+    return warehouse
 
 
 @flow(name="gcs-to-bigquery")

@@ -16,7 +16,7 @@ variable "region" {
 
 variable "credentials" {
   description = "Location of service account credential file"
-  default = "/home/jdtganding/Documents/bechdel-movies-project/keys/project_service_key.json"
+  default = "~/keys/project_service_key.json"
   type = string
 }
 
