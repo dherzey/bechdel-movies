@@ -24,8 +24,8 @@ def etl_full_flow(gcp_block_name = "bechdel-project-gcp-cred",
                   dataset = "data-projects-383009", 
                   bucket_name = "bechdel-project_data-lake"):
     """
-    Full ETL workflow which calls both flows for
-    loading data to GCS and to BigQuery
+    Full ETL workflow which calls both flows for loading data 
+    to GCS and to BigQuery
 
     Arguments:
         - gcp_block_name: Prefect block name for GCP credential
@@ -79,7 +79,6 @@ def deploy_flow(github_block_name, flow, deploy_name, cron=None):
 
 
 if __name__=="__main__":
-
     github_block_name = "bechdel-project-github"
 
     # scrape and load all data to GCS and to BigQuery
