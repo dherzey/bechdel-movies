@@ -1,12 +1,12 @@
 #---------------------------------------------------------------------------
 # This could be used for first time running of ETL scripts or for resetting 
 # of ETL configs. This include Bash commands to run all scripts and commands 
-# needed for this project's ETL. For the Python scripts, this will run the 
-# files according to their order. Make sure that all packages found in 
-# requirement.txt are installed.
+# needed for this project's ETL process. Make sure that all packages found 
+# in requirement.txt are installed.
 #
 # NOTE: To make this file executable, please run the following command:
-#         chmod +x run_etl.sh
+#         chmod +x run_project.sh
+# EXECUTE this file by typing: ./run_project.sh
 #
 # Last modified: April 2023
 #--------------------------------------------------------------------------
@@ -34,3 +34,6 @@ echo "Prefect deployments created."
 # start Prefect agent
 echo "Starting Prefect agent..."
 prefect agent start -q default
+
+# deploy Prefect full ETL workflow
+prefect deployment run 

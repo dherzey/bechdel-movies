@@ -80,7 +80,7 @@ def bq_tables_partition(dataset, table, column, block_name):
 
 @flow(name="gcs-to-bigquery")
 def etl_load_to_bq(block_name = "bechdel-project-gcp-cred", 
-                   dataset = "data-projects-383009", 
+                   dataset = "behcdel_movies_project", 
                    bucket_name = "bechdel-project_data-lake"):
     """
     Primary workflow which includes loading data from GCS

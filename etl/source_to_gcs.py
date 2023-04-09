@@ -71,7 +71,7 @@ def get_bechdel_data():
 
 
 @task(log_prints=True, description="Get IMDB data")
-def get_imdb_data(imdb_files, chunksize):
+def get_imdb_data(imdb_files: dict):
     """
     Reads movie datasets in chunks from IMDB's site:
     https://datasets.imdbws.com/.
@@ -84,8 +84,13 @@ def get_imdb_data(imdb_files, chunksize):
         - title.ratings.tsv.gz
 
     Arguments:
-        - imdb_files: a list of IMDB datasets to be read
-        - chunksize: number of rows to read per iteration.
+        - imdb_files: dictionary object containing the IMDB 
+                      dataset as key (str) and the chunksize 
+                      to be followed as its value (int)
+                      Example:
+                        imdb_files = {
+                            'title.basics.tsv.gz': 50_000
+                        }
     
     Returns:
         Dataframe of IMDB movie data in chunks
@@ -93,7 +98,8 @@ def get_imdb_data(imdb_files, chunksize):
 
     collection = []
     
-    for filename in imdb_files:
+    # main loop for reading and loading file
+    for filename, chunksize in imdb_files.items():
         url = f'https://datasets.imdbws.com/{filename}'
         data = pd.read_csv( url,
                             chunksize=chunksize,
@@ -129,7 +135,8 @@ def transform_imdb_data(df):
     
     for column in columns:
         try:
-            df[column] = pd.to_numeric(df[column], errors='coerce')
+            df[column] = pd.to_numeric(df[column], 
+                                       errors='coerce')
         except KeyError:
             pass
     
@@ -137,27 +144,30 @@ def transform_imdb_data(df):
 
 
 @flow(name="IMDB-data-ingestion")
-def imdb_data_flow(block_name, chunksize=50_000):
+def imdb_data_flow(block_name):
     """
-    Subflow which contain the main IMDB tasks
+    Subflow which contains the main IMDB tasks for data
+    ingestion and loading to GCS
 
     Arguments:
         - block_name: name of Prefect block for GCS bucket
-        - chunksize: number of rows to read per iteration.
-                     Default set to 50,000 rows.
 
     Returns:
         None
     """
 
-    imdb_files = ['title.basics.tsv.gz',
-                  'title.principals.tsv.gz',
-                  'title.crew.tsv.gz',
-                  'title.ratings.tsv.gz']
+    imdb_files = {
+        # 'title.basics.tsv.gz': 50_000,
+        'title.principals.tsv.gz': 80_000,
+        'title.crew.tsv.gz': 100_000,
+        'title.ratings.tsv.gz': 100_000
+    }
 
-    imdb_collection = get_imdb_data(imdb_files, chunksize)
+    imdb_collection = get_imdb_data(imdb_files)
 
-    for imdb_data, filename in zip(imdb_collection, imdb_files):
+    for imdb_data, filename in zip(imdb_collection, 
+                                   imdb_files.keys()):
+        
         filename = "_".join(filename.split(".")[:2])
 
         count = 0

@@ -21,7 +21,7 @@ from gcs_to_bigquery import etl_load_to_bq
 @flow(name="full-etl-flow")
 def etl_full_flow(gcp_block_name = "bechdel-project-gcp-cred", 
                   gcs_block_name = "bechdel-project-gcs",
-                  dataset = "data-projects-383009", 
+                  dataset = "bechdel_movies_project", 
                   bucket_name = "bechdel-project_data-lake"):
     """
     Full ETL workflow which calls both flows for loading data 
@@ -89,13 +89,13 @@ if __name__=="__main__":
                 "0 0 1 * *")
 
     # scrape and load data to GCS (usually for testing)
-    # function arguments set to default
+    # flow function arguments set to default
     deploy_flow(github_block_name, 
                 etl_load_to_gcs, 
                 "bechdel-etl-gcs")
     
     # load data from GCS to BigQuery (usually for testing)
-    # function arguments set to default
+    # flow function arguments set to default
     deploy_flow(github_block_name, 
                 etl_load_to_bq, 
                 "bechdel-etl-bq")
