@@ -53,6 +53,9 @@ python3 -m venv project-venv
 
 # activate virtual environment
 source ./project-venv/bin/activate
+
+# install all needed packages
+pip install -r requirements.txt
 ```
 
 ### Workflows

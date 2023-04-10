@@ -101,11 +101,15 @@ def get_imdb_data(imdb_files: dict):
     # main loop for reading and loading file
     for filename, chunksize in imdb_files.items():
         url = f'https://datasets.imdbws.com/{filename}'
+        
         data = pd.read_csv( url,
                             chunksize=chunksize,
                             iterator=True,
                             sep='\t',
-                            header=0 )  
+                            header=0,
+                            na_values='\\N',
+                            encoding='utf-8' )  
+        
         collection.append(data) 
 
     return collection  
@@ -128,17 +132,12 @@ def transform_imdb_data(df):
                                .replace('tt','')\
                                .astype(int)
     
-    columns = ['isAdult',
-               'endYear',
-               'startYear',
-               'runtimeMinutes']
-    
-    for column in columns:
-        try:
+    # make sure column dtype is consistent
+    for column in df.columns:
+        if df[column].dtype in ['int64','float64']:
+            # if error, make row NULL
             df[column] = pd.to_numeric(df[column], 
                                        errors='coerce')
-        except KeyError:
-            pass
     
     return df
 

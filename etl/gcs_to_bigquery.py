@@ -55,7 +55,7 @@ def gcs_imdb_to_bq(block_name, dataset, bucket_name, location):
         None
     """
 
-    imdb_files = [#'title.basics.tsv.gz',
+    imdb_files = ['title.basics.tsv.gz',
                   'title.principals.tsv.gz',
                   'title.crew.tsv.gz',
                   'title.ratings.tsv.gz']
@@ -103,7 +103,8 @@ def bq_tables_partition(dataset, table, column, block_name):
 
 
 @flow(name="gcs-to-bigquery")
-def etl_load_to_bq(gcp_block_name = "bechdel-project-gcp-cred", 
+def etl_load_to_bq(gcp_block_name = "bechdel-project-gcp-cred",
+                   bq_block_name = "bechdel-project-bq", 
                    dataset = "bechdel_movies_project", 
                    bucket_name = "bechdel-project_data-lake",
                    location = "us-west1"):
@@ -114,12 +115,12 @@ def etl_load_to_bq(gcp_block_name = "bechdel-project-gcp-cred",
 
     Arguments:
         - gcp_block_name: Prefect block name for GCP credential
+        - bq_block_name: Prefect block name for BigQuery
         - dataset: name of the BigQuery dataset
         - bucket_name: name of the GCS bucket where raw the
                        data is stored
         - location: dataset location (US, EU, etc.)
-        - bq_block_name: Prefect block name for BigQuery
-    
+
     Returns:
         None
     """
