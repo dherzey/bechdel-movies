@@ -30,7 +30,7 @@ def df_to_gcs(df, path, format, block_name):
     """
 
     gcs_block = GcsBucket.load(block_name)
-    gcs_block.upload_from_dataframe(df, path, format, {'encoding':'utf-8'})
+    gcs_block.upload_from_dataframe(df, path, format)
 
 
 @task(log_prints=True, retries=3, description="Get Oscars data")
