@@ -24,5 +24,5 @@ Finally, the following are the execution steps to run this folder in Terraform:
 4. `terraform destroy` (if needed): removes resources from the cloud 
 
 If successful, these files will create the following resources in GCP:
-- Google Clous Storage Bucket
+- Google Cloud Storage Bucket
 - BigQuery dataset

@@ -54,11 +54,23 @@ def create_gcs_bucket(gcp_cred_block, bucket_name, block_name):
 
 
 def create_bigquery(gcp_cred_block, block_name):
+    """
+    Create a Prefect block to connect and access BigQuery
+
+    Arguments:
+        - gcp_cred_block: name of the Prefect block storing the
+                          the GCP credentials
+        - block_name: the name of this Prefect block
+
+    Returns
+        block name
+    """
 
     bq_block = BigQueryWarehouse(
         gcp_credentials = GcpCredentials.load(gcp_cred_block)
     )
     bq_block.save(block_name, overwrite=True)
+    return block_name
 
 
 def create_github_block(repo_url, block_name):

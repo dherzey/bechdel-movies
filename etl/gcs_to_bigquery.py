@@ -60,10 +60,11 @@ def gcs_imdb_to_bq(block_name, dataset, bucket_name, location):
                   'title.crew.tsv.gz',
                   'title.ratings.tsv.gz']
 
-    # read and load IMDB data
     for filename in imdb_files:
         filename = "_".join(filename.split(".")[:2])
         uri = f"gs://{bucket_name}/imdb/{filename}/*.parquet"
+
+        #load to BigQuery
         gcs_to_bigquery(block_name = block_name,
                         uri = uri,
                         dataset = dataset,
@@ -90,6 +91,7 @@ def bq_tables_partition(dataset, table, column, block_name):
     table_new = table.replace("_raw", "")
     warehouse = BigQueryWarehouse.load(block_name)
 
+    #create new table with partition
     query = f"""
             CREATE OR REPLACE TABLE {dataset}.{table_new}
             PARTITION BY
@@ -97,6 +99,7 @@ def bq_tables_partition(dataset, table, column, block_name):
             SELECT * FROM {dataset}.{table};
             """
 
+    #execute changes in BigQuery
     warehouse.execute(query)
 
     return warehouse
@@ -142,7 +145,15 @@ def etl_load_to_bq(gcp_block_name = "bechdel-project-gcp-cred",
                     location = location)
     
     # read and load IMDB movie data
-    gcs_imdb_to_bq(gcp_block_name, dataset, bucket_name, location)
+    # gcs_imdb_to_bq(gcp_block_name, dataset, bucket_name, location)
+
+    """-------------------------------"""
+
+    #create new table with partition for oscars data
+    bq_tables_partition(dataset, "oscars_raw", "AwardYear", bq_block_name)
+
+    #create new table with partition for oscars data
+    bq_tables_partition(dataset, "bechdel_raw", "year", bq_block_name)
     
 
 if __name__=="__main__":

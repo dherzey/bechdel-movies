@@ -30,7 +30,7 @@ def df_to_gcs(df, path, format, block_name):
     """
 
     gcs_block = GcsBucket.load(block_name)
-    gcs_block.upload_from_dataframe(df, path, format)
+    gcs_block.upload_from_dataframe(df, path, format, {'encoding':'utf-8'})
 
 
 @task(log_prints=True, retries=3, description="Get Oscars data")
@@ -41,9 +41,11 @@ def get_oscars_data():
     elements and format results into a dataframe.
     """
 
+    #interact with database and get page source
     page_source = scrape_oscars_data()
     print("DONE: Scraped Oscars data")
 
+    #extract necessary elements into a dataframe
     results_df = extract_oscar_results(page_source)
     print("DONE: Extracted needed elements from HTML")
 
@@ -84,13 +86,13 @@ def get_imdb_data(imdb_files: dict):
         - title.ratings.tsv.gz
 
     Arguments:
-        - imdb_files: dictionary object containing the IMDB 
-                      dataset as key (str) and the chunksize 
-                      to be followed as its value (int)
-                      Example:
-                        imdb_files = {
-                            'title.basics.tsv.gz': 50_000
-                        }
+        imdb_files: dictionary object containing the IMDB 
+                    dataset as key (str) and the chunksize 
+                    to be followed as its value (int)
+                    Example:
+                    imdb_files = {
+                        'title.basics.tsv.gz': 50_000
+                    }
     
     Returns:
         Dataframe of IMDB movie data in chunks
@@ -98,10 +100,11 @@ def get_imdb_data(imdb_files: dict):
 
     collection = []
     
-    # main loop for reading and loading file
+    #main loop for reading and loading file
     for filename, chunksize in imdb_files.items():
         url = f'https://datasets.imdbws.com/{filename}'
         
+        #read in chunks and add \N as a NULL value
         data = pd.read_csv( url,
                             chunksize=chunksize,
                             iterator=True,
@@ -128,14 +131,16 @@ def transform_imdb_data(df):
         Transformed IMDB dataframe
     """
     
+    #make unique key as integer for easier merging
     df['tconst'] = df['tconst'].str\
                                .replace('tt','')\
                                .astype(int)
     
-    # make sure column dtype is consistent
+    #make sure column dtype is consistent
     for column in df.columns:
         if df[column].dtype in ['int64','float64']:
-            # if error, make row NULL
+
+            #if error, make row NULL
             df[column] = pd.to_numeric(df[column], 
                                        errors='coerce')
     
@@ -149,7 +154,7 @@ def imdb_data_flow(block_name):
     ingestion and loading to GCS
 
     Arguments:
-        - block_name: name of Prefect block for GCS bucket
+        block_name: name of Prefect block for GCS bucket
 
     Returns:
         None
@@ -164,6 +169,7 @@ def imdb_data_flow(block_name):
 
     imdb_collection = get_imdb_data(imdb_files)
 
+    #iterate for every IMDB dataset
     for imdb_data, filename in zip(imdb_collection, imdb_files.keys()):       
         filename = "_".join(filename.split(".")[:2])
 
@@ -199,15 +205,15 @@ def etl_load_to_gcs(block_name = 'bechdel-project-gcs'):
         None
     """
 
-    # #get and upload oscars data
-    # oscars_data = get_oscars_data()
-    # path = Path("oscars/oscars_awards.csv")
-    # df_to_gcs(oscars_data, path, 'csv', block_name)
+    #get and upload oscars data
+    oscars_data = get_oscars_data()
+    path = Path("oscars/oscars_awards.csv")
+    df_to_gcs(oscars_data, path, 'csv', block_name)
 
-    # #get and upload bechdel test movies data
-    # bechdel_data = get_bechdel_data()
-    # path = Path("bechdel/bechdel_test_movies.csv")
-    # df_to_gcs(bechdel_data, path, 'csv', block_name)
+    #get and upload bechdel test movies data
+    bechdel_data = get_bechdel_data()
+    path = Path("bechdel/bechdel_test_movies.csv")
+    df_to_gcs(bechdel_data, path, 'csv', block_name)
 
     #get and upload imdb datasets in chunks
     imdb_data_flow(block_name)  
