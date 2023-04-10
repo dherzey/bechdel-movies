@@ -19,8 +19,8 @@ from gcs_to_bigquery import etl_load_to_bq
 
 
 @flow(name="full-etl-flow")
-def etl_full_flow(gcp_block_name = "bechdel-project-gcp-cred", 
-                  gcs_block_name = "bechdel-project-gcs",
+def etl_full_flow(gcs_block_name = "bechdel-project-gcs",
+                  bq_block_name = "bechdel-project-bigquery",
                   dataset = "bechdel_movies_project", 
                   bucket_name = "bechdel-project_data-lake"):
     """
@@ -28,10 +28,10 @@ def etl_full_flow(gcp_block_name = "bechdel-project-gcp-cred",
     to GCS and to BigQuery
 
     Arguments:
-        - gcp_block_name: Prefect block name for GCP credential
         - gcs_block_name: Prefect block name for GCS bucket
+        - bq_block_name: Prefect block name for BigQuery
         - dataset: name of the BigQuery dataset
-        - bucket_name: name of the GCS bucket where raw the
+        - bucket_name: name of the GCS bucket where the raw
                        data is stored
 
     Returns:
@@ -39,7 +39,7 @@ def etl_full_flow(gcp_block_name = "bechdel-project-gcp-cred",
     """
 
     etl_load_to_gcs(gcs_block_name)
-    etl_load_to_bq(gcp_block_name, dataset, bucket_name)
+    etl_load_to_bq(bq_block_name, dataset, bucket_name)
 
 
 def deploy_flow(github_block_name, flow, deploy_name, cron=None):
