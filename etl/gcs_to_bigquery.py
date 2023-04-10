@@ -73,7 +73,7 @@ def gcs_imdb_to_bq(block_name, dataset, bucket_name, location):
         
 
 @task(log_prints=True)
-def bq_tables_partition(dataset, table, column, block_name):
+def bq_tables_partition(dataset, table, block_name):
     """
     Creates new table with partitioned columns from external
     raw tables in the dataset.
@@ -88,16 +88,24 @@ def bq_tables_partition(dataset, table, column, block_name):
         BigQueryWarehouse block info
     """
 
-    table_new = table.replace("_raw", "")
+    # table_new = table.replace("_raw", "")
     warehouse = BigQueryWarehouse.load(block_name)
 
-    #create new table with partition
+    # #create new table with partition
+    # query = f"""
+    #         CREATE OR REPLACE TABLE {dataset}.{table_new}
+    #         PARTITION BY
+    #             {column} AS
+    #         SELECT * FROM {dataset}.{table};
+    #         """
+
     query = f"""
-            CREATE OR REPLACE TABLE {dataset}.{table_new}
-            PARTITION BY
-                {column} AS
-            SELECT * FROM {dataset}.{table};
-            """
+    CREATE OR REPLACE EXTERNAL TABLE {dataset}.{table}
+    OPTIONS (
+        format = 'PARQUET',
+        uris = ["gs://bechdel-project_data-lake/imdb/title_basics/*.parquet"]
+    );
+    """
 
     #execute changes in BigQuery
     warehouse.execute(query)
@@ -149,12 +157,14 @@ def etl_load_to_bq(gcp_block_name = "bechdel-project-gcp-cred",
 
     """-------------------------------"""
 
-    #create new table with partition for oscars data
-    bq_tables_partition(dataset, "oscars_raw", "AwardYear", bq_block_name)
+    # #create new table with partition for oscars data
+    # bq_tables_partition(dataset, "oscars_raw", "AwardYear", bq_block_name)
 
-    #create new table with partition for oscars data
-    bq_tables_partition(dataset, "bechdel_raw", "year", bq_block_name)
+    # #create new table with partition for oscars data
+    # bq_tables_partition(dataset, "bechdel_raw", "year", bq_block_name)
     
+    bq = bq_tables_partition(dataset, "test", bq_block_name)
+    bq.close()
 
 if __name__=="__main__":
     etl_load_to_bq()
