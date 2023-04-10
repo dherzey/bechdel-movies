@@ -84,6 +84,7 @@ def get_imdb_data(imdb_files: dict):
         - title.principals.tsv.gz
         - title.crew.tsv.gz
         - title.ratings.tsv.gz
+        - name.basics.tsv.gz
 
     Arguments:
         imdb_files: dictionary object containing the IMDB 
@@ -136,14 +137,29 @@ def transform_imdb_data(df):
                                .replace('tt','')\
                                .astype(int)
     
+    #columns that should be a numerical type
+    columns = ['isAdult', 'endYear', 'startYear',
+               'runtimeMinutes', 'averageRating', 
+               'numVotes', 'birthYear', 'deathYear']
+    
+    #columns that should be in datetime
+    date_columns = ['endYear', 'startYear',
+                    'birthYear', 'deathYear']
+    
     #make sure column dtype is consistent
-    for column in df.columns:
-        if df[column].dtype in ['int64','float64']:
-
+    for column in columns:
+        try:
             #if error, make row NULL
             df[column] = pd.to_numeric(df[column], 
                                        errors='coerce')
-    
+            
+            #convert year columns to datetime
+            if column in date_columns:
+                df[column] = pd.to_datetime(df[column],
+                                            format='%Y')
+        except KeyError:
+            pass
+
     return df
 
 
@@ -164,7 +180,8 @@ def imdb_data_flow(block_name):
         'title.basics.tsv.gz': 50_000,
         'title.crew.tsv.gz': 100_000,
         'title.ratings.tsv.gz': 100_000,
-        'title.principals.tsv.gz': 200_000
+        'title.principals.tsv.gz': 200_000,
+        'name.basics.tsv.gz': 100_000
     }
 
     imdb_collection = get_imdb_data(imdb_files)

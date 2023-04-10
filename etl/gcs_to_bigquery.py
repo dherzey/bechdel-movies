@@ -5,51 +5,51 @@ Last modified: April 2023
 ----------------------------------------------------------------------"""
 
 from prefect import task, flow
-from prefect_gcp import GcpCredentials
 from prefect_gcp.bigquery import BigQueryWarehouse
-from prefect_gcp.bigquery import bigquery_load_cloud_storage
 
 
-@flow(name="call-bq-load", log_prints=True)
-def gcs_to_bigquery(block_name, uri, dataset, table, location):
+@task(log_prints=True)
+def gcs_to_bigquery(block_name, dataset, table, uri, format):
     """
     Loads raw data from GCS to BigQuery in an external table.
+    This executes a SQL query in the data warehouse.
 
     Arguments:
-        - block_name: Prefect block name for GCP credential
-        - uri: GCS file path, e.g. "gs://bucket-name/..."
+        - block_name: Prefect block name for BigQuery
         - dataset: name of the BigQuery dataset
         - table: name of the BigQuery table to be created
-        - location: dataset location (US, EU, etc.)
+        - uri: GCS file path, e.g. "gs://bucket-name/..."
+        - format: file format of the files to be read
     
     Returns:
-        Result response of function
+        BigQuery block info
     """
 
-    gcp_credentials = GcpCredentials.load(block_name)
+    warehouse = BigQueryWarehouse.load(block_name)
+
+    query = f"""
+            CREATE OR REPLACE EXTERNAL TABLE {dataset}.{table}
+            OPTIONS (
+                format = {format},
+                uris = {uri}
+            );
+            """
     
-    result = bigquery_load_cloud_storage(
-                uri = uri,
-                dataset = dataset,
-                table = table,
-                gcp_credentials = gcp_credentials,
-                location = location
-            )
-    
-    return result
+    #execute changes in BigQuery
+    warehouse.execute(query)
+    return warehouse
 
 
 @flow(name="IMDB-load-BQ", log_prints=True)
-def gcs_imdb_to_bq(block_name, dataset, bucket_name, location):
+def gcs_imdb_to_bq(block_name, bucket_name, dataset, format):
     """
     Subflow to load IMDB parquet files from GCS to BigQuery
 
     Arguments:
-        - block_name: Prefect block name for GCP credential
+        - block_name: Prefect block name for BigQuery
+        - bucket_name: GCS bucket name where data is stored
         - dataset: name of the BigQuery dataset
-        - bucket_name: name of the GCS bucket where the raw
-                       data is stored
-        - location: dataset location (US, EU, etc.)
+        - format: file format of the files to be read
     
     Returns:
         None
@@ -58,22 +58,23 @@ def gcs_imdb_to_bq(block_name, dataset, bucket_name, location):
     imdb_files = ['title.basics.tsv.gz',
                   'title.principals.tsv.gz',
                   'title.crew.tsv.gz',
-                  'title.ratings.tsv.gz']
+                  'title.ratings.tsv.gz',
+                  'name.basics.tsv.gz']
 
     for filename in imdb_files:
         filename = "_".join(filename.split(".")[:2])
-        uri = f"gs://{bucket_name}/imdb/{filename}/*.parquet"
+        uri = [f"gs://{bucket_name}/imdb/{filename}/*.{format}"]
 
         #load to BigQuery
         gcs_to_bigquery(block_name = block_name,
-                        uri = uri,
                         dataset = dataset,
                         table = f"imdb_{filename}_raw",
-                        location = location)
+                        uri = uri,
+                        format = format)
         
 
 @task(log_prints=True)
-def bq_tables_partition(dataset, table, block_name):
+def bq_tables_partition(dataset, table, column, block_name):
     """
     Creates new table with partitioned columns from external
     raw tables in the dataset.
@@ -88,74 +89,64 @@ def bq_tables_partition(dataset, table, block_name):
         BigQueryWarehouse block info
     """
 
-    # table_new = table.replace("_raw", "")
+    table_new = table.replace("_raw", "")
     warehouse = BigQueryWarehouse.load(block_name)
 
-    # #create new table with partition
-    # query = f"""
-    #         CREATE OR REPLACE TABLE {dataset}.{table_new}
-    #         PARTITION BY
-    #             {column} AS
-    #         SELECT * FROM {dataset}.{table};
-    #         """
-
+    #create new table with partition
     query = f"""
-    CREATE OR REPLACE EXTERNAL TABLE {dataset}.{table}
-    OPTIONS (
-        format = 'PARQUET',
-        uris = ["gs://bechdel-project_data-lake/imdb/title_basics/*.parquet"]
-    );
-    """
+            CREATE OR REPLACE TABLE {dataset}.{table_new}
+            PARTITION BY
+                {column} AS
+            SELECT * FROM {dataset}.{table};
+            """
 
     #execute changes in BigQuery
     warehouse.execute(query)
-
     return warehouse
 
 
 @flow(name="gcs-to-bigquery")
-def etl_load_to_bq(gcp_block_name = "bechdel-project-gcp-cred",
-                   bq_block_name = "bechdel-project-bigquery", 
+def etl_load_to_bq(block_name = "bechdel-project-bigquery", 
                    dataset = "bechdel_movies_project", 
-                   bucket_name = "bechdel-project_data-lake",
-                   location = "us-west1"):
+                   bucket_name = "bechdel-project_data-lake"):
     """
     Primary workflow which includes loading data from GCS
     to BigQuery. It also includes creating partitioned
     BigQuery tables from the created external tables.
 
     Arguments:
-        - gcp_block_name: Prefect block name for GCP credential
-        - bq_block_name: Prefect block name for BigQuery
+        - block_name: Prefect block name for BigQuery
         - dataset: name of the BigQuery dataset
         - bucket_name: name of the GCS bucket where raw the
                        data is stored
-        - location: dataset location (US, EU, etc.)
 
     Returns:
         None
     """
     
     # read and load oscars data to bigquery
-    uri = f"gs://{bucket_name}/oscars/*.csv"
-    gcs_to_bigquery(block_name = gcp_block_name,
-                    uri = uri,
+    uri = [f"gs://{bucket_name}/oscars/*.csv"]
+    gcs_to_bigquery(block_name = block_name,
                     dataset = dataset,
                     table = "oscars_raw",
-                    location = location)
+                    uri = uri,
+                    format = "csv")
     
     # read and load Bechdel Test movie list
-    uri = f"gs://{bucket_name}/bechdel/*.csv"
-    gcs_to_bigquery(block_name = gcp_block_name,
-                    uri = uri,
+    uri = [f"gs://{bucket_name}/bechdel/*.csv"]
+    gcs_to_bigquery(block_name = block_name,
                     dataset = dataset,
                     table = "bechdel_raw",
-                    location = location)
+                    uri = uri,
+                    format = "csv")
     
     # read and load IMDB movie data
-    # gcs_imdb_to_bq(gcp_block_name, dataset, bucket_name, location)
+    gcs_imdb_to_bq(block_name = block_name, 
+                   bucket_name =  bucket_name, 
+                   dataset = dataset, 
+                   format = "parquet")
 
-    """-------------------------------"""
+    """---------------------------------------------"""
 
     # #create new table with partition for oscars data
     # bq_tables_partition(dataset, "oscars_raw", "AwardYear", bq_block_name)
@@ -163,8 +154,6 @@ def etl_load_to_bq(gcp_block_name = "bechdel-project-gcp-cred",
     # #create new table with partition for oscars data
     # bq_tables_partition(dataset, "bechdel_raw", "year", bq_block_name)
     
-    bq = bq_tables_partition(dataset, "test", bq_block_name)
-    bq.close()
 
 if __name__=="__main__":
     etl_load_to_bq()
