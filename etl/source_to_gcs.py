@@ -7,7 +7,6 @@ Last modified: April 2023
 import io
 import time
 import requests
-import numpy as np
 import pandas as pd
 from pathlib import Path
 from prefect import task, flow
@@ -155,7 +154,7 @@ def transform_imdb_data(df):
             #across all data chunks
             if column in ['isAdult', 'birthYear', 
                           'deathYear', 'numVotes']:
-                df[column] = df[column].astype(np.int64)
+                df[column] = df[column].astype('Int64')
 
             elif column in ['runtimeMinutes', 'averageRating']:
                 df[column] = df[column].astype(float)
