@@ -138,8 +138,11 @@ def transform_imdb_data(df):
                'birthYear', 'deathYear']
     
     #columns that should be in datetime
-    date_columns = ['endYear', 'startYear',
-                    'birthYear', 'deathYear']
+    #note that birthYear and deathYear in names.basics exceeds
+    #the time range for pd.datetime and throws the following error:
+    #pandas._libs.tslibs.np_datetime.OutOfBoundsDatetime: 
+    #Out of bounds nanosecond timestamp: 1564-01-01 00:00:00
+    date_columns = ['endYear', 'startYear']
     
     #make sure column dtype is consistent
     for column in columns:
@@ -152,7 +155,7 @@ def transform_imdb_data(df):
             else:    
                 #if error, make row NULL
                 df[column] = pd.to_numeric(df[column], 
-                                        errors='coerce')
+                                           errors='coerce')
             
             #convert year columns to datetime
             if column in date_columns:
