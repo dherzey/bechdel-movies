@@ -6,6 +6,7 @@ through the host machine.
 Last modified: April 2023
 ----------------------------------------------------------------------"""
 
+import time
 from prefect import flow
 from prefect.deployments import Deployment
 from prefect_github import GitHubRepository
@@ -39,6 +40,12 @@ def etl_full_flow(gcs_block_name = "bechdel-project-gcs",
     """
 
     etl_load_to_gcs(gcs_block_name)
+
+    #delay next flow
+    print("ETL load to GCS done. Waiting for GCS to BQ load...")
+    time.delay(60)
+
+    print("Flow for GCS to BQ load starting...")
     etl_load_to_bq(bq_block_name, dataset, bucket_name)
 
 
