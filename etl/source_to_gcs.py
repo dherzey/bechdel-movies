@@ -132,15 +132,10 @@ def transform_imdb_data(df):
         Transformed IMDB dataframe
     """
     
-    #make unique key as integer for easier merging
-    df['tconst'] = df['tconst'].str\
-                               .replace('tt','')\
-                               .astype(int)
-    
     #columns that should be a numerical type
-    columns = ['isAdult', 'endYear', 'startYear',
-               'runtimeMinutes', 'averageRating', 
-               'numVotes', 'birthYear', 'deathYear']
+    columns = ['tconst', 'isAdult', 'endYear', 'startYear',
+               'runtimeMinutes', 'averageRating', 'numVotes', 
+               'birthYear', 'deathYear']
     
     #columns that should be in datetime
     date_columns = ['endYear', 'startYear',
@@ -149,9 +144,15 @@ def transform_imdb_data(df):
     #make sure column dtype is consistent
     for column in columns:
         try:
-            #if error, make row NULL
-            df[column] = pd.to_numeric(df[column], 
-                                       errors='coerce')
+            if column=='tconst':
+                #make unique key as integer for easier merging
+                df[column] = df[column].str\
+                                       .replace('tt','')\
+                                       .astype(int)    
+            else:    
+                #if error, make row NULL
+                df[column] = pd.to_numeric(df[column], 
+                                        errors='coerce')
             
             #convert year columns to datetime
             if column in date_columns:
@@ -177,10 +178,10 @@ def imdb_data_flow(block_name):
     """
 
     imdb_files = {
-        'title.basics.tsv.gz': 50_000,
-        'title.crew.tsv.gz': 100_000,
-        'title.ratings.tsv.gz': 100_000,
-        'title.principals.tsv.gz': 200_000,
+        # 'title.basics.tsv.gz': 50_000,
+        # 'title.crew.tsv.gz': 100_000,
+        # 'title.ratings.tsv.gz': 100_000,
+        # 'title.principals.tsv.gz': 200_000,
         'name.basics.tsv.gz': 100_000
     }
 
