@@ -7,6 +7,7 @@ Last modified: April 2023
 import io
 import time
 import requests
+import numpy as np
 import pandas as pd
 from pathlib import Path
 from prefect import task, flow
@@ -78,8 +79,7 @@ def get_imdb_data(imdb_files: dict):
     Reads movie datasets in chunks from IMDB's site:
     https://datasets.imdbws.com/.
 
-    The following are some examples of the datasets 
-    that can be read:
+    The following are the datasets that will be loaded:
         - title.basics.tsv.gz
         - title.principals.tsv.gz
         - title.crew.tsv.gz
@@ -132,35 +132,43 @@ def transform_imdb_data(df):
         Transformed IMDB dataframe
     """
     
-    #columns that should be a numerical type
+    #columns that should not be a string type
     columns = ['tconst', 'isAdult', 'endYear', 'startYear',
                'runtimeMinutes', 'averageRating', 'numVotes', 
-               'birthYear', 'deathYear']
-    
-    #columns that should be in datetime
-    #note that birthYear and deathYear in names.basics exceeds
-    #the time range for pd.datetime and throws the following error:
-    #pandas._libs.tslibs.np_datetime.OutOfBoundsDatetime: 
-    #Out of bounds nanosecond timestamp: 1564-01-01 00:00:00
-    date_columns = ['endYear', 'startYear']
+               'birthYear', 'deathYear']    
     
     #make sure column dtype is consistent
     for column in columns:
         try:
             if column=='tconst':
                 #make unique key as integer for easier merging
+                #with the Bechdel dataset
                 df[column] = df[column].str\
                                        .replace('tt','')\
                                        .astype(int)    
             else:    
-                #if error, make row NULL
+                #if row is str, make row NULL
                 df[column] = pd.to_numeric(df[column], 
                                            errors='coerce')
             
+            #make sure numeric datatypes are consistent
+            #across all data chunks
+            if column in ['isAdult', 'birthYear', 
+                          'deathYear', 'numVotes']:
+                df[column] = df[column].astype(np.int64)
+
+            elif column in ['runtimeMinutes', 'averageRating']:
+                df[column] = df[column].astype(float)
+            
             #convert year columns to datetime
-            if column in date_columns:
+            #note that birthYear and deathYear exceeds the time 
+            #range for pd.datetime and throws the following error:
+            #pandas._libs.tslibs.np_datetime.OutOfBoundsDatetime: 
+            #Out of bounds nanosecond timestamp: 1564-01-01 00:00:00
+            if column in ['endYear', 'startYear']:
                 df[column] = pd.to_datetime(df[column],
                                             format='%Y')
+                
         except KeyError:
             pass
 
@@ -181,10 +189,10 @@ def imdb_data_flow(block_name):
     """
 
     imdb_files = {
-        # 'title.basics.tsv.gz': 50_000,
-        # 'title.crew.tsv.gz': 100_000,
-        # 'title.ratings.tsv.gz': 100_000,
-        # 'title.principals.tsv.gz': 200_000,
+        'title.basics.tsv.gz': 50_000,
+        'title.crew.tsv.gz': 100_000,
+        'title.ratings.tsv.gz': 100_000,
+        'title.principals.tsv.gz': 200_000,
         'name.basics.tsv.gz': 100_000
     }
 

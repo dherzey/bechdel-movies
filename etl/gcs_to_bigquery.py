@@ -68,7 +68,7 @@ def gcs_imdb_to_bq(block_name, bucket_name, dataset, format):
         #load to BigQuery
         gcs_to_bigquery(block_name = block_name,
                         dataset = dataset,
-                        table = f"imdb_{filename}_raw",
+                        table = f"imdb_{filename}",
                         uri = uri,
                         format = format)
         
@@ -89,15 +89,14 @@ def bq_tables_partition(dataset, table, column, block_name):
         BigQueryWarehouse block info
     """
 
-    table_new = table.replace("_raw", "")
     warehouse = BigQueryWarehouse.load(block_name)
 
     #create new table with partition
     query = f"""
-            CREATE OR REPLACE TABLE {dataset}.{table_new}
+            CREATE OR REPLACE TABLE {dataset}.{table}
             PARTITION BY
                 {column} AS
-            SELECT * FROM {dataset}.{table};
+            SELECT * FROM {dataset}.{table}_partitioned;
             """
 
     #execute changes in BigQuery
@@ -128,7 +127,7 @@ def etl_load_to_bq(block_name = "bechdel-project-bigquery",
     uri = [f"gs://{bucket_name}/oscars/*.csv"]
     gcs_to_bigquery(block_name = block_name,
                     dataset = dataset,
-                    table = "oscars_raw",
+                    table = "oscars",
                     uri = uri,
                     format = "csv")
     
@@ -136,7 +135,7 @@ def etl_load_to_bq(block_name = "bechdel-project-bigquery",
     uri = [f"gs://{bucket_name}/bechdel/*.csv"]
     gcs_to_bigquery(block_name = block_name,
                     dataset = dataset,
-                    table = "bechdel_raw",
+                    table = "bechdel",
                     uri = uri,
                     format = "csv")
     
