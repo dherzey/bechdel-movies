@@ -8,7 +8,7 @@ pip install dbt-bigquery
 dbt init
 ```
 
-Input all the needed details for the project if prompted. For running dbt using docker, check out https://github.com/DataTalksClub/data-engineering-zoomcamp/tree/main/week_4_analytics_engineering/docker_setup
+Input all the needed details for the project if prompted. Alternatively, we can update our dbt profile under the `profiles.yml` file usually located in `~/.dbt/` folder. For running dbt using docker, check out https://github.com/DataTalksClub/data-engineering-zoomcamp/tree/main/week_4_analytics_engineering/docker_setup
 
 ### Using the starter project
 
