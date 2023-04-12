@@ -130,17 +130,6 @@ def transform_imdb_data(df):
     Returns:
         Transformed IMDB dataframe
     """
-
-    #columns that should be in array
-    columns = ['genres', 'directors', 'writers',
-               'primaryProfession', 'knownForTitles']
-    
-    #make sure column dtype is consistent
-    for column in columns:
-        try:
-            df[column] = df[column].str.split(',')
-        except KeyError:
-            pass
     
     #columns that should not be a string type
     columns = ['tconst', 'isAdult', 'endYear', 'startYear',
@@ -202,7 +191,7 @@ def imdb_data_flow(block_name):
         'title.crew.tsv.gz': 100_000,
         'title.ratings.tsv.gz': 100_000,
         'title.principals.tsv.gz': 200_000,
-        'name.basics.tsv.gz': 50_000
+        'name.basics.tsv.gz': 100_000
     }
 
     imdb_collection = get_imdb_data(imdb_files)
