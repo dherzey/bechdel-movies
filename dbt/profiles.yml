@@ -1,0 +1,14 @@
+bechdel_dbt_project:
+  outputs:
+    dev:
+      dataset: bechdel_dbt_dev
+      job_execution_timeout_seconds: 300
+      job_retries: 1
+      keyfile: /home/jdtganding/keys/project_service_key.json
+      location: us-west1
+      method: service-account
+      priority: interactive
+      project: data-projects-383009
+      threads: 4
+      type: bigquery
+  target: dev

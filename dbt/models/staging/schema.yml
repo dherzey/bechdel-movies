@@ -8,6 +8,7 @@ sources:
       - name: bechdel
       - name: oscars
       - name: imdb_title_basics
+      - name: imdb_name_basics
 
 models:
   - name: imdb_title_basics_model
