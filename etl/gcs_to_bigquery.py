@@ -150,8 +150,7 @@ def etl_load_to_bq(block_name = "bechdel-project-bigquery",
     #create new table with partition for imdb data
     bq_tables_partition(dataset, "imdb_title_basics", "startYear", block_name)
 
-    #create new table with partition for oscars data
-    # bq_tables_partition(dataset, "bechdel_raw", "year", block_name)
+    #create new table with cluster for oscars data
     
 
 if __name__=="__main__":
