@@ -95,7 +95,7 @@ def bq_tables_partition(dataset, table, column, block_name):
     query = f"""
             CREATE OR REPLACE TABLE {dataset}.{table}_partitioned
             PARTITION BY
-                {column} AS
+                DATE({column}) AS
             SELECT * FROM {dataset}.{table};
             """
 

@@ -10,17 +10,17 @@ sources:
       - name: imdb_title_basics
 
 models:
-  - name: split_genres
+  - name: imdb_title_basics_model
     description: "dbt model for splitting genres column"
     columns:
-      - name: movie_id
+      - name: tconst
         description: "The primary key for this table"
         tests:
           - unique
           - not_null
 
-  - name: my_second_dbt_model
-    description: "A starter dbt model"
+  - name: bechdel_transform_model
+    description: "dbt model for transforming Bechdel Test movie data"
     columns:
       - name: id
         description: "The primary key for this table"
