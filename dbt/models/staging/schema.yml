@@ -1,11 +1,19 @@
-
 version: 2
 
+sources:
+  - name: staging
+    database: data-projects-383009
+    schema: bechdel-dbt-dataset
+    tables:
+      - name: bechdel
+      - name: oscars
+      - name: imdb_title_basics
+
 models:
-  - name: my_first_dbt_model
-    description: "A starter dbt model"
+  - name: join_tables_model
+    description: "dbt model for joining Bechdel, Oscars and IMDB tables"
     columns:
-      - name: id
+      - name: movie_id
         description: "The primary key for this table"
         tests:
           - unique

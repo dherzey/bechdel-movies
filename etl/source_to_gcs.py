@@ -130,6 +130,17 @@ def transform_imdb_data(df):
     Returns:
         Transformed IMDB dataframe
     """
+
+    #columns that should be in array
+    columns = ['genres', 'directors', 'writers',
+               'primaryProfession', 'knownForTitles']
+    
+    #make sure column dtype is consistent
+    for column in columns:
+        try:
+            df[column] = df[column].str.split(',')
+        except KeyError:
+            pass
     
     #columns that should not be a string type
     columns = ['tconst', 'isAdult', 'endYear', 'startYear',
@@ -166,8 +177,7 @@ def transform_imdb_data(df):
             #Out of bounds nanosecond timestamp: 1564-01-01 00:00:00
             if column in ['endYear', 'startYear']:
                 df[column] = pd.to_datetime(df[column],
-                                            format='%Y')
-                
+                                            format='%Y')                
         except KeyError:
             pass
 
@@ -188,7 +198,7 @@ def imdb_data_flow(block_name):
     """
 
     imdb_files = {
-        'title.basics.tsv.gz': 50_000,
+        'title.basics.tsv.gz': 100_000,
         'title.crew.tsv.gz': 100_000,
         'title.ratings.tsv.gz': 100_000,
         'title.principals.tsv.gz': 200_000,
@@ -233,15 +243,15 @@ def etl_load_to_gcs(block_name = 'bechdel-project-gcs'):
         None
     """
 
-    #get and upload oscars data
-    oscars_data = get_oscars_data()
-    path = Path("oscars/oscars_awards.csv")
-    df_to_gcs(oscars_data, path, 'csv', block_name)
+    # #get and upload oscars data
+    # oscars_data = get_oscars_data()
+    # path = Path("oscars/oscars_awards.csv")
+    # df_to_gcs(oscars_data, path, 'csv', block_name)
 
-    #get and upload bechdel test movies data
-    bechdel_data = get_bechdel_data()
-    path = Path("bechdel/bechdel_test_movies.csv")
-    df_to_gcs(bechdel_data, path, 'csv', block_name)
+    # #get and upload bechdel test movies data
+    # bechdel_data = get_bechdel_data()
+    # path = Path("bechdel/bechdel_test_movies.csv")
+    # df_to_gcs(bechdel_data, path, 'csv', block_name)
 
     #get and upload imdb datasets in chunks
     imdb_data_flow(block_name)  
