@@ -198,11 +198,11 @@ def imdb_data_flow(block_name):
     """
 
     imdb_files = {
-        'title.basics.tsv.gz': 100_000,
+        'title.basics.tsv.gz': 50_000,
         'title.crew.tsv.gz': 100_000,
         'title.ratings.tsv.gz': 100_000,
         'title.principals.tsv.gz': 200_000,
-        'name.basics.tsv.gz': 100_000
+        'name.basics.tsv.gz': 50_000
     }
 
     imdb_collection = get_imdb_data(imdb_files)
