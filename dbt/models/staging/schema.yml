@@ -3,15 +3,15 @@ version: 2
 sources:
   - name: staging
     database: data-projects-383009
-    schema: bechdel-dbt-dataset
+    schema: bechdel_movies_project
     tables:
       - name: bechdel
       - name: oscars
       - name: imdb_title_basics
 
 models:
-  - name: join_tables_model
-    description: "dbt model for joining Bechdel, Oscars and IMDB tables"
+  - name: split_genres
+    description: "dbt model for splitting genres column"
     columns:
       - name: movie_id
         description: "The primary key for this table"

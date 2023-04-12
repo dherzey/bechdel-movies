@@ -93,10 +93,10 @@ def bq_tables_partition(dataset, table, column, block_name):
 
     #create new table with partition
     query = f"""
-            CREATE OR REPLACE TABLE {dataset}.{table}
+            CREATE OR REPLACE TABLE {dataset}.{table}_partitioned
             PARTITION BY
                 {column} AS
-            SELECT * FROM {dataset}.{table}_partitioned;
+            SELECT * FROM {dataset}.{table};
             """
 
     #execute changes in BigQuery
@@ -147,11 +147,11 @@ def etl_load_to_bq(block_name = "bechdel-project-bigquery",
 
     """---------------------------------------------"""
 
-    # #create new table with partition for oscars data
-    # bq_tables_partition(dataset, "oscars_raw", "AwardYear", bq_block_name)
+    #create new table with partition for imdb data
+    bq_tables_partition(dataset, "imdb_title_basics", "startYear", block_name)
 
-    # #create new table with partition for oscars data
-    # bq_tables_partition(dataset, "bechdel_raw", "year", bq_block_name)
+    #create new table with partition for oscars data
+    # bq_tables_partition(dataset, "bechdel_raw", "year", block_name)
     
 
 if __name__=="__main__":
