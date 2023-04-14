@@ -9,6 +9,7 @@ sources:
       - name: oscars
       - name: imdb_title_basics
       - name: imdb_name_basics
+      - name: imdb_title_crew
 
 models:
   - name: imdb_title_basics_model

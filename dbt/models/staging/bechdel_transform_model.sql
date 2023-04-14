@@ -2,8 +2,8 @@
 
 SELECT *,
     CASE
-        WHEN rating = 1 THEN "failed"
-        WHEN rating = 2 THEN "failed"
-        ELSE "passed"
+        WHEN rating = 3 THEN 'passed'
+        ELSE "failed"
     END AS ratingRemark
 FROM {{ source('staging', 'bechdel') }}
+WHERE imdbid IS NOT NULL
