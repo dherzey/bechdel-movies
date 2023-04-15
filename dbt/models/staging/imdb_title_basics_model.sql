@@ -7,7 +7,9 @@ WITH title_basics AS (
         primaryTitle,
         originalTitle,
         isAdult,
-        startYear,
+        CAST(
+            EXTRACT(YEAR FROM startYear) AS INT64 
+        ) AS startYear,
         SPLIT(genres, ',') AS genre
     FROM {{ source('staging', 'imdb_title_basics') }}
 )
@@ -22,7 +24,3 @@ SELECT
     genre
 FROM title_basics
 CROSS JOIN UNNEST(title_basics.genre) AS genre
-
-{% if var('is_test_run', default=True) %}
-LIMIT 1000
-{% endif %}

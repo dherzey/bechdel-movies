@@ -11,13 +11,13 @@ WITH name_basics AS (
 )
 
 SELECT 
+    tconst,
     nconst,
     primaryName,
     birthYear,
-    primaryProfession,
-    knownForTitle
+    primaryProfession
 FROM name_basics
-CROSS JOIN UNNEST(name_basics.knownForTitle) AS knownForTitle
+CROSS JOIN UNNEST(name_basics.knownForTitle) AS tconst
 
 {% if var('is_test_run', default=True) %}
 LIMIT 1000

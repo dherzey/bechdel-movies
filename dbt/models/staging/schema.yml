@@ -6,7 +6,6 @@ sources:
     schema: bechdel_movies_project
     tables:
       - name: bechdel
-      - name: oscars
       - name: imdb_title_basics
       - name: imdb_name_basics
       - name: imdb_title_crew
@@ -22,6 +21,24 @@ models:
           - not_null
 
   - name: bechdel_transform_model
+    description: "dbt model for transforming Bechdel Test movie data"
+    columns:
+      - name: id
+        description: "The primary key for this table"
+        tests:
+          - unique
+          - not_null
+
+  - name: imdb_name_basics_model
+    description: "dbt model for transforming Bechdel Test movie data"
+    columns:
+      - name: id
+        description: "The primary key for this table"
+        tests:
+          - unique
+          - not_null
+
+  - name: imdb_title_crew_model
     description: "dbt model for transforming Bechdel Test movie data"
     columns:
       - name: id

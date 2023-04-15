@@ -1,0 +1,18 @@
+version: 2
+
+sources:
+  - name: intermediate
+    database: data-projects-383009
+    schema: bechdel_movies_project
+    tables:
+      - name: oscars
+
+models:
+  - name: bechdel_oscars_model
+    description: "dbt model for splitting genres column"
+    columns:
+      - name: tconst
+        description: "The primary key for this table"
+        tests:
+          - unique
+          - not_null
