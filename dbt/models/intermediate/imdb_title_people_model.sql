@@ -14,6 +14,7 @@ SELECT
     t.tconst,
     t.primaryTitle,
     t.originalTitle,
+    t.genre,
     n.nconst,
     n.primaryName,
     n.primaryProfession

@@ -10,31 +10,31 @@ title_crew AS (
     FROM {{ ref('imdb_title_crew_model') }}
 ),
 
-title_name_crew AS (
+name_basics AS (
     SELECT *
-    FROM {{ ref('imdb_title_people_model') }}
+    FROM {{ ref('imdb_name_basics_model') }}
 ),
 
 bechdel_director AS (
-    SELECT 
+    SELECT DISTINCT
         b.imdbid,
         b.primaryTitle,
-        b.originalTitle,
+        b.genre,
         c.director,
         b.bechdelRating,
         b.bechdelRatingRemark
     FROM bechdel_imdb AS b
-    INNER JOIN title_crew AS c
+    LEFT JOIN title_crew AS c
     ON b.imdbid = c.tconst
 )
 
-SELECT 
+SELECT
     b.imdbid,
     b.primaryTitle,
+    b.genre,
     n.primaryName AS directorName,
     b.bechdelRating,
     b.bechdelRatingRemark
 FROM bechdel_director AS b
-INNER JOIN title_name_crew AS n
+LEFT JOIN name_basics AS n
 ON b.director = n.nconst
-AND b.imdbid = n.tconst

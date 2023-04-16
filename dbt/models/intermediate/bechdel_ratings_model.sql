@@ -13,7 +13,6 @@ title_ratings AS (
 SELECT 
     b.imdbid,
     b.primaryTitle,
-    b.originalTitle,
     b.bechdelRating,
     b.bechdelRatingRemark,
     r.averageRating AS IMDBRating
