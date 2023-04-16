@@ -13,14 +13,12 @@ oscars AS (
 SELECT
     b.imdbid,
     b.primaryTitle,
-    b.originalTitle,
     b.startYear,
-    b.isAdult,
-    b.bechdelRating,
-    b.bechdelRatingRemark,
     o.AwardCeremonyNum AS oscarsCeremony,
     o.AwardCategory AS oscarsCategory,
-    o.AwardStatus AS oscarsStatus
+    o.AwardStatus AS oscarsStatus,
+    b.bechdelRating,
+    b.bechdelRatingRemark,
 FROM bechdel_imdb AS b
     LEFT JOIN oscars AS o
     ON b.primaryTitle = o.Movie

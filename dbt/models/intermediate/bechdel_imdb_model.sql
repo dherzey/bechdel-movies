@@ -13,7 +13,6 @@ title_basics AS (
 SELECT
     t.tconst AS imdbid,
     t.primaryTitle,
-    t.originalTitle,
     t.startYear,
     t.isAdult,
     t.genre,

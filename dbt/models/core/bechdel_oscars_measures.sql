@@ -6,12 +6,19 @@ WITH bechdel_oscars AS (
 )
 
 SELECT
-    genre,
+    oscarsCategory,
+    oscarsStatus,
     bechdelRatingRemark,
     COUNT(imdbid) AS movieCount
-FROM bechdel
-WHERE genre IS NOT NULL
+FROM bechdel_oscars
+WHERE 
+    oscarsCeremony IS NOT NULL
+    AND oscarsStatus = 'won'
 GROUP BY 
-    genre, 
+    oscarsCategory,
+    oscarsStatus, 
     bechdelRatingRemark
-ORDER BY genre
+ORDER BY 
+    oscarsCategory,
+    oscarsStatus,
+    bechdelRatingRemark

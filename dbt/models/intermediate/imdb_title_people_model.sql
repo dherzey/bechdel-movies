@@ -13,7 +13,6 @@ name_basics AS (
 SELECT 
     t.tconst,
     t.primaryTitle,
-    t.originalTitle,
     t.genre,
     n.nconst,
     n.primaryName,
