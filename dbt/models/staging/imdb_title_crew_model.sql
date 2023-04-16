@@ -18,6 +18,6 @@ FROM (
      )
     CROSS JOIN UNNEST(title_crew.writer) AS writer
 
-{% if var('is_test_run', default=True) %}
-LIMIT 1000
-{% endif %}
+-- {% if var('is_test_run', default=True) %}
+-- LIMIT 1000
+-- {% endif %}

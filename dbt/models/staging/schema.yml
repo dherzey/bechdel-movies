@@ -6,9 +6,11 @@ sources:
     schema: bechdel_movies_project
     tables:
       - name: bechdel
+      - name: oscars
       - name: imdb_title_basics
       - name: imdb_name_basics
       - name: imdb_title_crew
+      - name: imdb_title_ratings
 
 models:
   - name: imdb_title_basics_model

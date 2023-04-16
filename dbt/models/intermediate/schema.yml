@@ -1,12 +1,5 @@
 version: 2
 
-sources:
-  - name: intermediate
-    database: data-projects-383009
-    schema: bechdel_movies_project
-    tables:
-      - name: oscars
-
 models:
   - name: bechdel_oscars_model
     description: "dbt model for splitting genres column"

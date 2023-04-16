@@ -5,20 +5,24 @@ WITH name_basics AS (
         nconst,
         primaryName,
         birthYear,
-        primaryProfession,
+        SPLIT(primaryProfession, ',') AS primaryProfession,
         SPLIT(knownForTitles, ',') AS knownForTitle
     FROM {{ source('staging', 'imdb_name_basics') }}
 )
 
 SELECT 
-    tconst,
+    CAST(
+        REGEXP_REPLACE(knownForTitle, '[^0-9]', '')
+        AS INT64
+    ) AS tconst,
     nconst,
     primaryName,
     birthYear,
     primaryProfession
 FROM name_basics
-CROSS JOIN UNNEST(name_basics.knownForTitle) AS tconst
+CROSS JOIN UNNEST(name_basics.knownForTitle) AS knownForTitle
+CROSS JOIN UNNEST(name_basics.primaryProfession) AS primaryProfession
 
-{% if var('is_test_run', default=True) %}
-LIMIT 1000
-{% endif %}
+-- {% if var('is_test_run', default=True) %}
+-- LIMIT 1000
+-- {% endif %}
