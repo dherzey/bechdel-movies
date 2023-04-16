@@ -1,6 +1,7 @@
 data/
 project-venv/
 keys/
+.vscode/
 terraform/
 !terraform/*.tf
 !terraform/*.md
