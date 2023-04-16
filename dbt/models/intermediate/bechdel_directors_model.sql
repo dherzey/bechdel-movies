@@ -16,7 +16,7 @@ name_basics AS (
 ),
 
 bechdel_director AS (
-    SELECT DISTINCT
+    SELECT
         b.imdbid,
         b.primaryTitle,
         b.genre,
@@ -24,11 +24,11 @@ bechdel_director AS (
         b.bechdelRating,
         b.bechdelRatingRemark
     FROM bechdel_imdb AS b
-    LEFT JOIN title_crew AS c
-    ON b.imdbid = c.tconst
+        LEFT JOIN title_crew AS c
+        ON b.imdbid = c.tconst
 )
 
-SELECT
+SELECT DISTINCT
     b.imdbid,
     b.primaryTitle,
     b.genre,
@@ -36,5 +36,5 @@ SELECT
     b.bechdelRating,
     b.bechdelRatingRemark
 FROM bechdel_director AS b
-LEFT JOIN name_basics AS n
-ON b.director = n.nconst
+    LEFT JOIN name_basics AS n
+    ON b.director = n.nconst

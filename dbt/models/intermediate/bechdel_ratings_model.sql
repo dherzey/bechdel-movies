@@ -17,5 +17,5 @@ SELECT
     b.bechdelRatingRemark,
     r.averageRating AS IMDBRating
 FROM bechdel_imdb AS b
-INNER JOIN title_ratings AS r
-ON b.imdbid = r.tconst
+    INNER JOIN title_ratings AS r
+    ON b.imdbid = r.tconst

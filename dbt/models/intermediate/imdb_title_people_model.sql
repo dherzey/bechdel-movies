@@ -19,5 +19,5 @@ SELECT
     n.primaryName,
     n.primaryProfession
 FROM title_basics AS t
-INNER JOIN name_basics AS n
-ON t.tconst = n.tconst
+    INNER JOIN name_basics AS n
+    ON t.tconst = n.tconst
