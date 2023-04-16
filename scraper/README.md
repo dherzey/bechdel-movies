@@ -1,7 +1,8 @@
-## Installing Selenium and BeautifulSoup to scrape the Oscars database
+## Installing Selenium to interact with the Oscars database
+Since the Oscars scraper uses the Firefox browser for its Selenium driver, kindly make sure that Firefox is installed in the host machine.
 
 ```bash
-#pip install the selenium package
+#pip install the selenium package (if not yet installed)
 pip install selenium
 
 #download the Firefox driver from https://github.com/mozilla/geckodriver/releases
@@ -12,9 +13,4 @@ tar -xvzf geckodriver*
 
 #move the executable to /usr/loca/bin/
 sudo mv geckodriver /usr/local/bin/
-
-#we also install beautifulsoup for extracting data in our html files
-pip install beautifulsoup4
 ```
-
-## Creating TMDB account to generate API key

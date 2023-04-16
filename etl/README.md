@@ -1,4 +1,4 @@
-### Create virtual environment
+## Create virtual environment
 A virtual environment was first created using Python to contain all necessary packages for deploying through Prefect along with other packages for scraping and modelling data. See [requirements.txt](https://github.com/dherzey/bechdel-movies-project/blob/main/requirements.txt) in the main directory for the full list of packages.
 
 ```bash
@@ -14,6 +14,7 @@ source ./project-venv/bin/activate
 # install all needed packages
 pip install -r requirements.txt
 ```
+**NOTE:** Selenium additionally requires a webdriver to be installed.
 
 ## Connect to Prefect cloud
 We can use the local Prefect Orion to see our workflows or we can use Prefect cloud (which I prefer since it have extra features such as automation). To connect to Prefect cloud, make sure that you have created an account first.
