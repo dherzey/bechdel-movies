@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: bechdel_oscars_model
+  - name: dim_bechdel_oscars
     description: "dbt model for splitting genres column"
     columns:
       - name: tconst

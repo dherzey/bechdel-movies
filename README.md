@@ -28,6 +28,7 @@ IMDB datasets are available to download from https://www.imdb.com/interfaces/. F
 - title.principals.tsv.gz
 - title.crew.tsv.gz
 - title.ratings.tsv.gz
+- name.basics.tsv.gz
 
 The data will be read in chunks and converted into a `.parquet` file for loading in GCS. See [source_to_gcs.py](https://github.com/dherzey/bechdel-movies-project/blob/main/etl/source_to_gcs.py) for the functions to collect and transform IMDB data.
 

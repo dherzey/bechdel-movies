@@ -2,7 +2,7 @@
 
 WITH bechdel_oscars AS (
     SELECT *
-    FROM {{ ref('bechdel_oscars_model') }}
+    FROM {{ ref('dim_bechdel_oscars') }}
 )
 
 SELECT

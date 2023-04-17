@@ -22,7 +22,3 @@ SELECT
 FROM name_basics
 CROSS JOIN UNNEST(name_basics.knownForTitle) AS knownForTitle
 CROSS JOIN UNNEST(name_basics.primaryProfession) AS primaryProfession
-
--- {% if var('is_test_run', default=True) %}
--- LIMIT 1000
--- {% endif %}

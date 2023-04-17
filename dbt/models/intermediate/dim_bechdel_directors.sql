@@ -2,7 +2,7 @@
 
 WITH bechdel_imdb AS (
     SELECT *
-    FROM {{ ref('bechdel_imdb_model') }}
+    FROM {{ ref('dim_bechdel_imdb') }}
 ),
 
 title_crew AS (
@@ -38,3 +38,6 @@ SELECT DISTINCT
 FROM bechdel_director AS b
     LEFT JOIN name_basics AS n
     ON b.director = n.nconst
+{% if var('is_test_run', default=True) %}
+LIMIT 1000
+{% endif %}
