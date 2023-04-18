@@ -13,7 +13,7 @@ title_ratings AS (
 SELECT DISTINCT
     b.imdbid,
     b.primaryTitle,
-    r.averageRating AS IMDBRating
+    r.averageRating AS IMDBRating,
     b.bechdelRating,
     b.bechdelRatingRemark
 FROM bechdel_imdb AS b

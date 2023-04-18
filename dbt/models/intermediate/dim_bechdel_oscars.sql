@@ -35,12 +35,7 @@ FROM bechdel_imdb AS b
     LEFT JOIN oscars AS o
     ON b.primaryTitle = o.Movie
     AND b.startYear = o.AwardYear
-{% if var('is_test_run', default=True) %}
-LIMIT 1000
-{% endif %}
-
 UNION ALL
-
 SELECT DISTINCT
     b.imdbid,
     b.primaryTitle,
