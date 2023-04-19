@@ -48,7 +48,7 @@ bechdel_imdb AS (
         CAST(MIN(startYear) AS STRING) AS oldestYear,
         CAST(MAX(startYear) AS STRING) AS latestYear
     FROM {{ ref('dim_bechdel_imdb') }}
-),
+)
 
 SELECT * FROM bechdel
 UNION ALL
