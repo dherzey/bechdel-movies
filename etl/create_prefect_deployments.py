@@ -130,21 +130,16 @@ if __name__=="__main__":
     # scrape and load all data to GCS and to BigQuery
     # full ETL load runs every 1st day of the month
     deploy_flow(github_block_name, 
-                etl_full_flow_alt, 
-                "bechdel-etl-full-alt",
+                etl_full_flow, 
+                "bechdel-etl-full",
                 "0 0 1 * *")
 
-    # scrape and load data to GCS (usually for testing)
-    # flow function arguments set to default
+    # alternative ETL flow which uses files from datasets
+    # mostly for testing, for issues which occur in Selenium,
+    # or to avoid calling the BechdelTest.com API frequently
     deploy_flow(github_block_name, 
-                etl_load_to_gcs, 
-                "bechdel-etl-gcs")
-    
-    # load data from GCS to BigQuery (usually for testing)
-    # flow function arguments set to default
-    deploy_flow(github_block_name, 
-                etl_load_to_bq, 
-                "bechdel-etl-bq")
+                etl_full_flow_alt, 
+                "bechdel-etl-full-alt")
     
     # trigger dbt commands in dev to transform data in BigQuery
     deploy_flow(github_block_name,
