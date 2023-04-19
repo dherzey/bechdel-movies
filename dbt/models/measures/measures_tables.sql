@@ -24,17 +24,38 @@ imdb_title AS (
     SELECT
         'imdb_title_basics' AS tableName,
         COUNT(*) AS rowCount,
-        COUNT(DISTINCT CONCAT(primaryTitle, startYear)) AS movieCount,
+        COUNT(DISTINCT tconst) AS movieCount,
         CAST(MIN(startYear) AS STRING) AS oldestYear,
         CAST(MAX(startYear) AS STRING) AS latestYear
     FROM {{ ref('imdb_title_basics_model') }}
-)
+),
+
+imdb_crew AS (
+    SELECT
+        'imdb_title_crew' AS tableName,
+        COUNT(*) AS rowCount,
+        COUNT(DISTINCT tconst) AS movieCount,
+        NULL AS oldestYear,
+        NULL AS latestYear
+    FROM {{ ref('imdb_title_crew_model') }}
+),
+
+bechdel_imdb AS (
+    SELECT
+        'dim_bechdel_imdb' AS tableName,
+        COUNT(*) AS rowCount,
+        COUNT(DISTINCT imdbid) AS movieCount,
+        CAST(MIN(startYear) AS STRING) AS oldestYear,
+        CAST(MAX(startYear) AS STRING) AS latestYear
+    FROM {{ ref('dim_bechdel_imdb') }}
+),
 
 SELECT * FROM bechdel
 UNION ALL
 SELECT * FROM oscars
 UNION ALL
 SELECT * FROM imdb_title
-{% if var('is_test', default=True) %}
-LIMIT 1000
-{% endif %}
+UNION ALL
+SELECT * FROM imdb_crew
+UNION ALL
+SELECT * FROM bechdel_imdb
