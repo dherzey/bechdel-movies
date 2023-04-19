@@ -12,13 +12,13 @@ oscars AS (
         AWardStatus,        
         CAST(AwardYear AS INT64) AS AwardYear,
         AwardCeremonyNum
-    FROM {{ source('staging', 'oscars') }}
+    FROM {{ source('staging', 'oscars_new') }}
     WHERE AwardYear NOT LIKE '%/%'
 ),
 
 oscars_doubledate AS (
     SELECT *
-    FROM {{ source('staging', 'oscars') }}
+    FROM {{ source('staging', 'oscars_new') }}
     WHERE AwardYear LIKE '%/%'
 )
 
