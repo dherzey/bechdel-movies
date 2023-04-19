@@ -3,6 +3,7 @@ prefect
 prefect-sqlalchemy
 prefect-gcp
 prefect-github
+prefect-dbt
 protobuf
 pyarrow
 pandas-gbq

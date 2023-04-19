@@ -6,17 +6,17 @@ through the host machine.
 Last modified: April 2023
 ----------------------------------------------------------------------"""
 
-import time
 from prefect import flow
 from prefect.deployments import Deployment
 from prefect_github import GitHubRepository
 from prefect.server.schemas.schedules import CronSchedule
 
 import sys
-sys.path.append("./etl")
+sys.path.extend(["./etl","./dbt"])
 
 from source_to_gcs import etl_load_to_gcs
 from gcs_to_bigquery import etl_load_to_bq
+from trigger_dbt_prefect import trigger_dbt
 
 
 @flow(name="full-etl-flow")
@@ -43,6 +43,26 @@ def etl_full_flow(gcs_block_name = "bechdel-project-gcs",
     etl_load_to_bq(bq_block_name, dataset, bucket_name)
 
 
+@flow(name='dbt-prod-flow')
+def trigger_dbt_prod():
+    """
+    Create a flow to trigger dbt commands in production. 
+    This uses the prod profile under the dbt folder.
+    """
+
+    trigger_dbt(target='prod', is_test=False)
+
+
+@flow(name='dbt-dev-flow')
+def trigger_dbt_dev():
+    """
+    Create a flow to trigger dbt commands in development. 
+    This uses the prod profile under the dbt folder.
+    """
+
+    trigger_dbt(target='dev', is_test=True)
+
+    
 def deploy_flow(github_block_name, flow, deploy_name, cron=None):
     """
     Create a Prefect deployment from flow. This uses the
@@ -100,3 +120,13 @@ if __name__=="__main__":
     deploy_flow(github_block_name, 
                 etl_load_to_bq, 
                 "bechdel-etl-bq")
+    
+    # trigger dbt commands in dev to transform data in BigQuery
+    deploy_flow(github_block_name,
+                trigger_dbt_dev,
+                "trigger-dbt-dev")
+
+    # trigger dbt commands in prod to transform data in BigQuery
+    deploy_flow(github_block_name,
+                trigger_dbt_prod,
+                "trigger-dbt-prod")
