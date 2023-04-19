@@ -130,15 +130,15 @@ if __name__=="__main__":
     # scrape and load all data to GCS and to BigQuery
     # full ETL load runs every 1st day of the month
     deploy_flow(github_block_name, 
-                etl_full_flow, 
-                "bechdel-etl-full",
+                etl_full_flow_alt, 
+                "bechdel-etl-full-alt",
                 "0 0 1 * *")
 
     # scrape and load data to GCS (usually for testing)
     # flow function arguments set to default
     deploy_flow(github_block_name, 
-                etl_load_to_gcs_alt, 
-                "bechdel-etl-gcs_alt")
+                etl_load_to_gcs, 
+                "bechdel-etl-gcs")
     
     # load data from GCS to BigQuery (usually for testing)
     # flow function arguments set to default

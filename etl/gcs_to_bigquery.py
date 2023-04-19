@@ -94,7 +94,7 @@ def bq_tables_action(dataset, table, action, block_name):
 
     #create new table with partition/cluster
     query = f"""
-            CREATE OR REPLACE TABLE {dataset}.{table}-new
+            CREATE OR REPLACE TABLE {dataset}.{table}_new
             {action} 
             AS SELECT * FROM {dataset}.{table};
             """
