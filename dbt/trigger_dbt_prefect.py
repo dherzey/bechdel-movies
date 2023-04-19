@@ -20,7 +20,7 @@ def trigger_dbt(target, is_test):
         - target: the name of the target profile to use. 
                   Can either be dev or prod.
         - is_test: accepts boolean. If False, dbt will give full results
-                   of models. Otherwise, results are limited to 1000.
+                   of models. Otherwise, results have limited rows.
 
     Returns:
         None

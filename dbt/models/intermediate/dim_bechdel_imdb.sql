@@ -22,3 +22,6 @@ FROM bechdel AS b
     LEFT JOIN title_basics AS t
     ON b.imdbid = t.tconst 
     AND t.startYear = b.year
+{% if var('is_test', default=True) %}
+LIMIT 100000
+{% endif %}

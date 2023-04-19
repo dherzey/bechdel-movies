@@ -48,6 +48,6 @@ SELECT DISTINCT
 FROM bechdel_imdb AS b
     LEFT JOIN oscars_doubledate AS o
     ON b.primaryTitle = o.Movie
-{% if var('is_test_run', default=True) %}
+{% if var('is_test', default=True) %}
 LIMIT 1000
 {% endif %}

@@ -38,6 +38,6 @@ SELECT DISTINCT
 FROM bechdel_director AS b
     LEFT JOIN name_basics AS n
     ON b.director = n.nconst
-{% if var('is_test_run', default=True) %}
+{% if var('is_test', default=True) %}
 LIMIT 1000
 {% endif %}
