@@ -16,7 +16,7 @@ variable "region" {
 
 variable "credentials" {
   description = "Location of service account credential file"
-  default = "~/keys/project_service_key.json"
+  default = "/home/jdtganding/keys/project_service_key.json"
   type = string
 }
 

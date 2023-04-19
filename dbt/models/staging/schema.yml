@@ -33,7 +33,7 @@ models:
         descripton: "release year of the title"
       - name: genre
         description: "genre of the title; original table includes up 
-                      to three genres and separated in the model"
+                      to three genres and then separated in the model"
 
   - name: bechdel_transform_model
     description: "dbt model for transforming Bechdel Test movie data"

@@ -1,6 +1,5 @@
 ## Configure and provision GCP resources
-
-Before using Terraform, a service account file is needed. The path of this file can be placed in [variables.tf](https://github.com/dherzey/bechdel-movies-project/blob/main/terraform/variables.tf) within the following lines:
+Before using Terraform, a service account file is needed. The path to this file can be placed in [variables.tf](https://github.com/dherzey/bechdel-movies-project/blob/main/terraform/variables.tf) within the following lines:
 ```
 variable "credentials" {
   description = "Location of service account credential file"
@@ -15,8 +14,10 @@ export GOOGLE_APPLICATION_CREDENTIALS="<path/to/your/service-account-authkeys>.j
 # Refresh token/session, and verify authentication
 gcloud auth application-default login
 ```
+Take note that the <b>project variable</b> in [variables.tf](https://github.com/dherzey/bechdel-movies-project/blob/main/terraform/variables.tf) should also be changed accordingly.
 
-Finally, the following are the execution steps to run in Terraform:
+## Run terraform
+The following are the common execution steps and their function in Terraform:
 
 1. `terraform init`: initialize and configure backend
 2. `terraform plan`: previews changes and proposes execution plan
