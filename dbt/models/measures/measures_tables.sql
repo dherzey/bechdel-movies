@@ -17,7 +17,7 @@ oscars AS (
         COUNT(DISTINCT CONCAT(Movie, AwardYear)) AS movieCount,
         MIN(AwardYear) AS oldestYear,
         MAX(AwardYear) AS latestYear
-    FROM {{ source('staging','oscars') }}
+    FROM {{ source('staging','oscars_new') }}
 ),
 
 imdb_title AS (

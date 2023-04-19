@@ -11,7 +11,7 @@ WITH title_basics AS (
             EXTRACT(YEAR FROM startYear) AS INT64 
         ) AS startYear,
         SPLIT(genres, ',') AS genre
-    FROM {{ source('staging', 'imdb_title_basics-new') }}
+    FROM {{ source('staging', 'imdb_title_basics_new') }}
 )
 
 SELECT 
