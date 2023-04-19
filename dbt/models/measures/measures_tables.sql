@@ -30,16 +30,6 @@ imdb_title AS (
     FROM {{ ref('imdb_title_basics_model') }}
 ),
 
-imdb_crew AS (
-    SELECT
-        'imdb_title_crew' AS tableName,
-        COUNT(*) AS rowCount,
-        COUNT(DISTINCT tconst) AS movieCount,
-        NULL AS oldestYear,
-        NULL AS latestYear
-    FROM {{ ref('imdb_title_crew_model') }}
-),
-
 bechdel_imdb AS (
     SELECT
         'dim_bechdel_imdb' AS tableName,
@@ -55,7 +45,5 @@ UNION ALL
 SELECT * FROM oscars
 UNION ALL
 SELECT * FROM imdb_title
-UNION ALL
-SELECT * FROM imdb_crew
 UNION ALL
 SELECT * FROM bechdel_imdb
