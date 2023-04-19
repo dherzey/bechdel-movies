@@ -35,3 +35,6 @@ UNION ALL
 SELECT * FROM oscars
 UNION ALL
 SELECT * FROM imdb_title
+{% if var('is_test', default=True) %}
+LIMIT 1000
+{% endif %}
