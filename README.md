@@ -19,7 +19,7 @@ See more info in [datasets](https://github.com/dherzey/bechdel-movies-project/bl
 ## Configure cloud resources using Terraform
 Resources are configured and provisioned using Terraform. This would need GCP service account credentials in order to create a Google Cloud Storage bucket and a BigQuery dataset in the indicated GCP project. See [Terraform folder](https://github.com/dherzey/bechdel-movies-project/blob/main/terraform) for more info.
 
-To run Terraform, make sure to change the path of the service account file and the project's name in the [variables.tf](https://github.com/dherzey/bechdel-movies-project/blob/main/terraform/variables.tf). Then, we can execute the following commands:
+To run Terraform, make sure to change the path to the service account file and the project's name in the [variables.tf](https://github.com/dherzey/bechdel-movies-project/blob/main/terraform/variables.tf). Then, execute the following commands:
 1. `terraform init`
 2. `terraform plan`
 3. `terraform apply`
@@ -45,6 +45,23 @@ pip install -r requirements.txt
 ```
 <i><b>NOTE:</b> For Selenium, an additional webdriver needs to be installed. [See more info](https://github.com/dherzey/bechdel-movies-project/blob/main/scraper/README.md).</i>
 
+### Connect to Prefect cloud
+We can use the local Prefect Orion to see our workflows or we can use Prefect cloud. To connect to Prefect cloud, make sure that you have created an account first.
+```bash
+# Make sure Prefect is successfully installed
+prefect --help
+
+# (optional) you can create a new profile and set it as your active account
+prefect profile create cloud-user
+prefect profile use cloud-user
+
+# Login to Prefect cloud. This will prompt for the generated API_KEY
+prefect cloud login
+
+# Set configuration for Prefect account
+prefect config set PREFECT_API_URL = "<API_URL>"
+```
+
 ### Create Prefect blocks and deployments
 ```bash
 # create blocks
@@ -52,6 +69,17 @@ python3 etl/create_prefect_blocks.py
 
 # create deployments
 python3 etl/create_prefect_deployments.py
+```
+
+### Run full ETL workflow
+```bash
+# start Prefect agent
+prefect agent start -q default
+
+# trigger the alternative full ETL deployment
+# to avoid overusing the BechdelTest.com API
+# or if having trouble with Selenium 
+prefect deployment run full-etl-flow-alt/bechdel-etl-full-alt
 ```
 
 ## Transform data using dbt
