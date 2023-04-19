@@ -6,21 +6,34 @@ sources:
     schema: bechdel_movies_project
     tables:
       - name: bechdel
-      - name: oscars
-      - name: imdb_title_basics
+      - name: oscars-new
+      - name: imdb_title_basics-new
       - name: imdb_name_basics
       - name: imdb_title_crew
       - name: imdb_title_ratings
 
 models:
   - name: imdb_title_basics_model
-    description: "dbt model for splitting genres column"
+    description: "contains the transformed data from imdb_title_basics"
     columns:
       - name: tconst
-        description: "The primary key for this table"
+        description: "unique identifier of the imdb title"
         tests:
           - unique
           - not_null
+      - name: titleType
+        description: "type/format of the title"
+      - name: primaryTitle
+        description: "the more popular title used for promotions"
+      - name: originalTitle
+        description: "the original title in the original language"
+      - name: isAdult
+        descirption: "0 if a non-adult title, 1 if an adult title"
+      - name: startYear
+        descripton: "release year of the title"
+      - name: genre
+        description: "genre of the title; original table includes up 
+                      to three genres and separated in the model"
 
   - name: bechdel_transform_model
     description: "dbt model for transforming Bechdel Test movie data"

@@ -17,6 +17,7 @@ sys.path.extend(["./etl","./dbt"])
 from source_to_gcs import etl_load_to_gcs
 from gcs_to_bigquery import etl_load_to_bq
 from trigger_dbt_prefect import trigger_dbt
+from source_to_gcs_alt import etl_load_to_gcs_alt
 
 
 @flow(name="full-etl-flow")
@@ -43,24 +44,48 @@ def etl_full_flow(gcs_block_name = "bechdel-project-gcs",
     etl_load_to_bq(bq_block_name, dataset, bucket_name)
 
 
+@flow(name="full-etl-flow-alt")
+def etl_full_flow_alt(gcs_block_name = "bechdel-project-gcs",
+                  bq_block_name = "bechdel-project-bigquery",
+                  dataset = "bechdel_movies_project", 
+                  bucket_name = "bechdel-project_data-lake"):
+    """
+    Full ETL workflow which calls both flows for loading data 
+    to GCS and to BigQuery
+
+    Arguments:
+        - gcs_block_name: Prefect block name for GCS bucket
+        - bq_block_name: Prefect block name for BigQuery
+        - dataset: name of the BigQuery dataset
+        - bucket_name: name of the GCS bucket where the raw
+                       data is stored
+
+    Returns:
+        None
+    """
+
+    etl_load_to_gcs_alt(gcs_block_name)
+    etl_load_to_bq(bq_block_name, dataset, bucket_name)
+
+
 @flow(name='dbt-prod-flow')
-def trigger_dbt_prod():
+def trigger_dbt_prod(target='prod', is_test=False):
     """
     Create a flow to trigger dbt commands in production. 
     This uses the prod profile under the dbt folder.
     """
 
-    trigger_dbt(target='prod', is_test=False)
+    trigger_dbt(target, is_test)
 
 
 @flow(name='dbt-dev-flow')
-def trigger_dbt_dev():
+def trigger_dbt_dev(target='dev', is_test=True):
     """
     Create a flow to trigger dbt commands in development. 
     This uses the prod profile under the dbt folder.
     """
 
-    trigger_dbt(target='dev', is_test=True)
+    trigger_dbt(target, is_test)
 
     
 def deploy_flow(github_block_name, flow, deploy_name, cron=None):
@@ -112,8 +137,8 @@ if __name__=="__main__":
     # scrape and load data to GCS (usually for testing)
     # flow function arguments set to default
     deploy_flow(github_block_name, 
-                etl_load_to_gcs, 
-                "bechdel-etl-gcs")
+                etl_load_to_gcs_alt, 
+                "bechdel-etl-gcs_alt")
     
     # load data from GCS to BigQuery (usually for testing)
     # flow function arguments set to default

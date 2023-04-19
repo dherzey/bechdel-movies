@@ -74,15 +74,16 @@ def gcs_imdb_to_bq(block_name, bucket_name, dataset, format):
         
 
 @task(log_prints=True)
-def bq_tables_partition(dataset, table, column, block_name):
+def bq_tables_action(dataset, table, action, block_name):
     """
-    Creates new table with partitioned columns from external
-    raw tables in the dataset.
+    Creates new table with partitioned and/or clustered
+    columns from raw tables in the dataset.
 
     Arguments:
-        - dataset: name of the BigQuery dataset
+        - dataset: name of the BigQuery dataset 
         - table: name of the BigQuery table to be created
-        - column: name of columns to partition
+        - action: whether to partition and/or cluster; accepts
+                  only PARTITION BY and/or CLUSTER BY statements
         - block_name: Prefect block name for BigQuery
     
     Returns:
@@ -91,12 +92,11 @@ def bq_tables_partition(dataset, table, column, block_name):
 
     warehouse = BigQueryWarehouse.load(block_name)
 
-    #create new table with partition
+    #create new table with partition/cluster
     query = f"""
-            CREATE OR REPLACE TABLE {dataset}.{table}_partitioned
-            PARTITION BY
-                DATE({column}) AS
-            SELECT * FROM {dataset}.{table};
+            CREATE OR REPLACE TABLE {dataset}.{table}-new
+            {action} 
+            AS SELECT * FROM {dataset}.{table};
             """
 
     #execute changes in BigQuery
@@ -147,11 +147,14 @@ def etl_load_to_bq(block_name = "bechdel-project-bigquery",
 
     """---------------------------------------------"""
 
-    #create new table with partition for imdb data
-    bq_tables_partition(dataset, "imdb_title_basics", "startYear", block_name)
+    # create new table with partition for imdb data
+    action = """PARTITION BY DATE(startYear) 
+                CLUSTER BY titleType"""
+    bq_tables_action(dataset, "imdb_title_basics", action, block_name)
 
-    #create new table with cluster for oscars data
-    
+    #create new table with cluster for the following data
+    action = "CLUSTER BY AwardCeremonyNum"
+    bq_tables_action(dataset, "oscars", action, block_name)
 
 if __name__=="__main__":
     etl_load_to_bq()

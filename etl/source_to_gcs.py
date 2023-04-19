@@ -14,7 +14,7 @@ from prefect_gcp.cloud_storage import GcsBucket
 
 import sys
 sys.path.append("./scraper")
-from scrape_oscars_db import scrape_oscars_data, extract_oscar_results
+from scrape_oscars_db import *
 
 
 @task(log_prints=True, description="Upload dataframe to GCS")
@@ -41,15 +41,18 @@ def get_oscars_data():
     elements and format results into a dataframe.
     """
 
-    #interact with database and get page source
+    # interact with database and get page source
     page_source = scrape_oscars_data()
     print("DONE: Scraped Oscars data")
 
-    #extract necessary elements into a dataframe
-    results_df = extract_oscar_results(page_source)
+    # extract necessary elements into a dataframe
+    df = extract_oscar_results(page_source)
     print("DONE: Extracted needed elements from HTML")
 
-    return results_df
+    # save csv file to datasets folder for reference
+    df.to_csv("./datasets/oscars.csv", index=False)
+
+    return df
 
 
 @task(log_prints=True, description="Get Bechdel data")
@@ -68,6 +71,9 @@ def get_bechdel_data():
     url = 'http://bechdeltest.com/api/v1/getAllMovies'
     html = requests.get(url).content
     df = pd.read_json(io.StringIO(html.decode('utf-8')))
+
+    # save csv file to datasets folder for reference
+    df.to_csv("./datasets/bechdel.csv", index=False)
     
     return df
 

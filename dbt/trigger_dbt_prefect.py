@@ -6,11 +6,11 @@ the create_prefect_deployments.py script.
 Last modified: April 2023
 ----------------------------------------------------------------------"""
 
-from prefect import task
+from prefect import flow
 from prefect_dbt.cli.commands import DbtCoreOperation
 
 
-@task(log_prints=True)
+@flow(log_prints=True)
 def trigger_dbt(target, is_test):
     """
     Create a flow to trigger dbt commands. This uses the 
@@ -34,3 +34,7 @@ def trigger_dbt(target, is_test):
     )
 
     result.run()
+
+
+if __name__=="__main__":
+    trigger_dbt(target='dev', is_test=True)

@@ -14,7 +14,7 @@ source ./project-venv/bin/activate
 # install all needed packages
 pip install -r requirements.txt
 ```
-**NOTE:** Selenium additionally requires a webdriver to be installed.
+<i><b>NOTE:</b> For Selenium, an additional webdriver needs to be installed. [See more info](https://github.com/dherzey/bechdel-movies-project/blob/main/scraper/README.md).</i>
 
 ## Connect to Prefect cloud
 We can use the local Prefect Orion to see our workflows or we can use Prefect cloud (which I prefer since it have extra features such as automation). To connect to Prefect cloud, make sure that you have created an account first.
