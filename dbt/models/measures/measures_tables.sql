@@ -38,6 +38,16 @@ bechdel_imdb AS (
         CAST(MIN(startYear) AS STRING) AS oldestYear,
         CAST(MAX(startYear) AS STRING) AS latestYear
     FROM {{ ref('dim_bechdel_imdb') }}
+),
+
+bechdel_oscars AS (
+    SELECT
+        'dim_bechdel_oscars' AS tableName,
+        COUNT(*) AS rowCount,
+        COUNT(DISTINCT imdbid) AS movieCount,
+        CAST(MIN(startYear) AS STRING) AS oldestYear,
+        CAST(MAX(startYear) AS STRING) AS latestYear
+    FROM {{ ref('dim_bechdel_imdb') }}
 )
 
 SELECT * FROM bechdel
@@ -47,3 +57,5 @@ UNION ALL
 SELECT * FROM imdb_title
 UNION ALL
 SELECT * FROM bechdel_imdb
+UNION ALL
+SELECT * FROM bechdel_oscars
