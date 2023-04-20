@@ -9,7 +9,7 @@ bechdel_dbt_project:
       location: us-central1
       method: service-account
       priority: interactive
-      project: data-projects-3495
+      project: data-project-3495
       threads: 4
       type: bigquery
     prod:
@@ -20,6 +20,6 @@ bechdel_dbt_project:
       location: us-central1
       method: service-account
       priority: interactive
-      project: data-projects-3495
+      project: data-project-3495
       threads: 4
       type: bigquery

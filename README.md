@@ -80,7 +80,7 @@ if __name__=="__main__":
 ```
 Additionally, make sure to change the `bucket_name` for the following files: 
 - [gcs_to_bigquery.py](https://github.com/dherzey/bechdel-movies-project/tree/main/etl/gcs_to_bigquery.py)
-- [flows_to_deplot.py](https://github.com/dherzey/bechdel-movies-project/tree/main/etl/flows_to_deploy.py)
+- [flows_to_deploy.py](https://github.com/dherzey/bechdel-movies-project/tree/main/etl/flows_to_deploy.py)
 
 ```bash
 # create blocks
@@ -100,6 +100,7 @@ prefect agent start -q default
 # trigger alternative full ETL workflow
 prefect deployment run full-etl-flow-alt/bechdel-etl-full-alt
 ```
+It takes approximately 2 hours to run the full script using an `e2-standard-4` instance in GCP.
 
 ## Transform data using dbt
 Before triggering data transformation of BigQuery tables, make sure to update the service account file path and the project name in [profiles.yml](https://github.com/dherzey/bechdel-movies-project/blob/main/dbt/profiles.yml) for both dev and prod targets. Then, we can run the following deployments:

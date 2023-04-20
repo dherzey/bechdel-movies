@@ -157,6 +157,7 @@ def etl_load_to_bq(block_name = "bechdel-project-bigquery",
     #create new table with cluster for the following data
     action = "CLUSTER BY AwardCeremonyNum"
     bq_tables_action(dataset, "oscars", action, block_name)
+    
 
 if __name__=="__main__":
     etl_load_to_bq()

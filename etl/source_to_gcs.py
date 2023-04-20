@@ -225,7 +225,7 @@ def imdb_data_flow(block_name):
 
 
 @flow(name="source-to-gcs")
-def etl_load_to_gcs(block_name = 'bechdel-project-gcs'):
+def etl_load_to_gcs(block_name='bechdel-project-gcs'):
     """
     Primary workflow for extraction and loading of data.
     All collected data are placed into dataframes that
