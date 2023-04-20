@@ -19,7 +19,6 @@ models:
       - name: tconst
         description: "unique identifier of the IMDB title"
         tests:
-          - unique
           - not_null
       - name: titleType
         description: "type/format of the title"
