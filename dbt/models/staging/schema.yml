@@ -51,7 +51,7 @@ models:
         decription: "unique identifier of the title within bechdeltest.com"
         tests:
           - unique
-          - not null
+          - not_null
       - name: year
         description: "release year of the title"
       - name: ratingRemark
