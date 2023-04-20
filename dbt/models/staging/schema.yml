@@ -44,7 +44,7 @@ models:
         description: "unique identifier of the title based on IMDB tconst"
         tests:
           - unique
-          - not null
+          - not_null
       - name: rating
         description: "Bechdel Test score of the title"
       - name: id

@@ -103,7 +103,7 @@ prefect deployment run full-etl-flow-alt/bechdel-etl-full-alt
 It takes approximately 2 hours to run the full script using an `e2-standard-4` instance in GCP.
 
 ## Transform data using dbt
-Before triggering data transformation of BigQuery tables, make sure to update the service account file path and the project name in [profiles.yml](https://github.com/dherzey/bechdel-movies-project/blob/main/dbt/profiles.yml) for both dev and prod targets. Do the same for the [schema.yml](https://github.com/dherzey/bechdel-movies-project/blob/main/dbt/models/staging/schema.yml) under models/staging:
+Before triggering data transformation of BigQuery tables, make sure to update the service account file path and the project name in [profiles.yml](https://github.com/dherzey/bechdel-movies-project/blob/main/dbt/profiles.yml) for both dev and prod targets. Do the same for the [schema.yml](https://github.com/dherzey/bechdel-movies-project/blob/main/dbt/models/staging/schema.yml) under staging models:
 
 ```
 sources:
