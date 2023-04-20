@@ -109,4 +109,6 @@ prefect deployment run dbt-prod-flow/trigger-dbt-prod
 ## Dashboard
 
 
-## Further improvements
+## Recommendations and further improvements
+- to add other additional analysis and measures, such as whether having more women in the cast/crew affects the Bechdel test score of a movie
+- to further develop and organize the dbt models and configurations

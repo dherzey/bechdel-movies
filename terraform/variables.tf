@@ -4,7 +4,7 @@ locals {
 
 variable "project" {
   description = "Your GCP Project ID"
-  default = "data-projects-3495"
+  default = "data-project-3495"
   type = string
 }
 
