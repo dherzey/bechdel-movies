@@ -4,7 +4,7 @@ models:
   - name: dim_bechdel_imdb
     description: "model which joins Bechdel and IMDB title basics"
     columns:
-      - name: tconst
+      - name: imdbid
         description: "unique identifier of the IMDB title"
         tests:
           - not_null

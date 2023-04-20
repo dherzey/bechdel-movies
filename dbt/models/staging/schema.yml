@@ -44,8 +44,6 @@ models:
         tests:
           - unique
           - not_null
-      - name: rating
-        description: "Bechdel Test score of the title"
       - name: id
         decription: "unique identifier of the title within bechdeltest.com"
         tests:
@@ -53,6 +51,8 @@ models:
           - not_null
       - name: year
         description: "release year of the title"
+      - name: rating
+        description: "Bechdel Test score of the title"
       - name: ratingRemark
         description: "whether the rating is passed or failed; scores of 0-2
                       are marked as failed while scores with 3 are passed"
