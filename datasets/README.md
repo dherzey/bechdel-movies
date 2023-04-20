@@ -20,7 +20,7 @@ IMDB datasets are available to download from https://www.imdb.com/interfaces/. T
 The data will be read in chunks and converted into a `.parquet` file for loading in GCS. See [source_to_gcs.py](https://github.com/dherzey/bechdel-movies-project/blob/main/etl/source_to_gcs.py) for the functions to collect and transform IMDB data.
 
 ## Using TMDB API to collect movie data (to be added)
-We use the TMDB API to collect the top popular movies of each year along with their cast and crew info. This is especially helpful since TMDB have additonal cast/crew info, such as their gender, which could provide additional insights to our analysis. See the initial code under `get_tmdb_data()`in [scrape_movie_data.py](https://github.com/dherzey/bechdel-movies-project/blob/main/scraper/scrape_movie_data.py).
+We use the TMDB API to collect the top popular movies of each year along with their cast and crew info. This is especially helpful since TMDB have additonal cast/crew info, such as their gender, which could provide additional insights to our analysis. See the initial code under `get_tmdb_data()`in [scrape_tmdb_data.py](https://github.com/dherzey/bechdel-movies-project/blob/main/scraper/scrape_tmdb_data.py).
 
 <br>
 <i>This product uses the TMDB API but is not endorsed or certified by TMDB.</i>

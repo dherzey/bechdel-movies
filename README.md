@@ -5,7 +5,7 @@ This project is part of the final requirement for DataTalks.Club's data engineer
 
 
 ## Data Architecture
-
+![Data architecture of the project!](/diagram/diagram.png)
 
 ## Collecting Data From Source
 Data is collected from the following web sources and database:
@@ -14,7 +14,7 @@ Data is collected from the following web sources and database:
 - IMDB available datasets
 - The Movie Database API (<i>to be added</i>)
 
-See more info in [datasets](https://github.com/dherzey/bechdel-movies-project/blob/main/datasets)
+See more info in [datasets](https://github.com/dherzey/bechdel-movies-project/blob/main/datasets).
 
 ## Configure cloud resources using Terraform
 Resources are configured and provisioned using Terraform. This would need GCP service account credentials in order to create a Google Cloud Storage bucket and a BigQuery dataset in the indicated GCP project. See [Terraform folder](https://github.com/dherzey/bechdel-movies-project/blob/main/terraform) for more info.
@@ -95,16 +95,17 @@ prefect deployment run full-etl-flow-alt/bechdel-etl-full-alt
 ```
 
 ## Transform data using dbt
-If ETL run is successful, trigger data transformation of BigQuery tables by running the following deployments:
+Before triggering data transformation of BigQuery tables, make sure to update the service account file path and the project name in [profiles.yml]((https://github.com/dherzey/bechdel-movies-project/blob/main/dbt/profiles.yml) for both dev and prod targets. Then, we can run the following deployments:
 
 ```bash
-# trigger dbt development
-prefect deployment run dbt-dev-flow/trigger-dbt-dev
+# trigger dbt development for testing
+dbt build --target dev
 
-# trigger dbt production
+# trigger dbt production through Prefect
+# this deployment is scheduled to run every month
 prefect deployment run dbt-prod-flow/trigger-dbt-prod
 ```
 
-## Data analysis dashboard
+## Dashboard
 
 ## Further improvements
