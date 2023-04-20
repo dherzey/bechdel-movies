@@ -1,5 +1,5 @@
 # Bechdel movies and the Academy Awards
-This project is part of the final requirement for [DataTalks.Club's data engineerring bootcamp](https://github.com/DataTalksClub/data-engineering-zoomcamp/tree/main). 
+This project is part of the final requirement for [DataTalks.Club's data engineering bootcamp](https://github.com/DataTalksClub/data-engineering-zoomcamp/tree/main). 
 
 ## Objective
 

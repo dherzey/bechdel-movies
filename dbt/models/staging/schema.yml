@@ -67,6 +67,8 @@ models:
           - not_null
       - name: nconst
         description: "alphanumeric unique identifier of the name/person"
+        tests:
+          - not_null
       - name: primaryName
         description: "name by which the person is most often credited"
       - name: birthYear

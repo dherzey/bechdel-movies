@@ -11,7 +11,7 @@ name_basics AS (
 )
 
 SELECT 
-    t.tconst,
+    t.tconst AS imdbid,
     t.primaryTitle,
     t.genre,
     n.nconst,

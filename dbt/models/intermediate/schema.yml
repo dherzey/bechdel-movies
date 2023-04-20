@@ -1,11 +1,104 @@
 version: 2
 
 models:
-  - name: dim_bechdel_oscars
-    description: "dbt model for splitting genres column"
+  - name: dim_bechdel_imdb
+    description: "model which joins Bechdel and IMDB title basics"
     columns:
       - name: tconst
-        description: "The primary key for this table"
+        description: "unique identifier of the IMDB title"
         tests:
-          - unique
           - not_null
+      - name: primaryTitle
+        description: "the more popular title used for promotions"
+      - name: startYear
+        descripton: "release year of the title"
+      - name: isAdult
+        description: "0 if a non-adult title, 1 if an adult title"
+      - name: genre
+        description: "genre of the title; original table includes up 
+                      to three genres and then separated in the model"
+      - name: bechdelRating
+        description: "Bechdel Test score of the title"
+      - name: bechdelRatingRemark
+        description: "whether the rating is passed or failed; scores of 0-2
+                      are marked as failed while scores with 3 are passed"
+
+  - name: dim_bechdel_oscars
+    description: "model which joins Bechdel and Oscars data"
+    columns:
+      - name: imdbid
+        description: "unique identifier of the IMDB title"
+        tests:
+          - not_null
+      - name: primaryTitle
+        description: "the more popular title used for promotions"
+      - name: startYear
+        descripton: "release year of the title"
+      - name: oscarsCeremony
+        description: "the nth annual ceremony award"
+      - name: oscarsCategory
+        description: "the category the film was nominated for"
+      - name: oscarsStatus
+        description: "whether the film was only nominated or had won"
+      - name: bechdelRating
+        description: "Bechdel Test score of the title"
+      - name: bechdelRatingRemark
+        description: "whether the rating is passed or failed; scores of 0-2
+                      are marked as failed while scores with 3 are passed"
+
+  - name: dim_bechdel_directors
+    description: "model which joins Bechdel and crew data"
+    columns:
+      - name: imdbid
+        description: "unique identifier of the IMDB title"
+        tests:
+          - not_null
+      - name: primaryTitle
+        description: "the more popular title used for promotions"
+      - name: directorName
+        description: "name of the title's director"
+      - name: genre
+        description: "genre of the title; original table includes up 
+                      to three genres and then separated in the model"
+      - name: bechdelRating
+        description: "Bechdel Test score of the title"
+      - name: bechdelRatingRemark
+        description: "whether the rating is passed or failed; scores of 0-2
+                      are marked as failed while scores with 3 are passed"
+
+  - name: dim_bechdel_ratings
+    description: "model which joins Bechdel and IMDB ratings data"
+    columns:
+      - name: imdbid
+        description: "unique identifier of the IMDB title"
+        tests:
+          - not_null
+      - name: primaryTitle
+        description: "the more popular title used for promotions"
+      - name: IMDBRating
+        description: "IMDB weighted average of all the individual user ratings"
+      - name: bechdelRating
+        description: "Bechdel Test score of the title"
+      - name: bechdelRatingRemark
+        description: "whether the rating is passed or failed; scores of 0-2
+                      are marked as failed while scores with 3 are passed"
+
+  - name: dim_imdb_people
+    description: "model which joins the IMDB title and cast/crew data"
+    columns:
+      - name: imdbid
+        description: "unique identifier of the IMDB title"
+        tests:
+          - not_null
+      - name: primaryTitle
+        description: "the more popular title used for promotions"
+      - name: genre
+        description: "genre of the title; original table includes up 
+                      to three genres and then separated in the model"
+      - name: nconst
+        description: "alphanumeric unique identifier of the name/person"
+      - name: primaryName
+        description: "name by which the person is most often credited"
+      - name: primaryProfession
+        description: "profession of the person; original data lists the 
+                      top 3 profession"

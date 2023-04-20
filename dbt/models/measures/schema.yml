@@ -1,0 +1,61 @@
+version: 2
+
+models:
+  - name: measures_bechdel
+    description: "table which measures Bechdel table statistics"
+    columns:
+      - name: year
+        description: "release year of Bechdel test movie list"
+      - name: ratingRemark
+        description: "whether a title has passed or failed the Bechdel test"
+      - name: movieCount
+        description: "aggregated count of titles as grouped by given columns"
+
+  - name: measures_genre
+    description: "table which counts the number of movies which passed or failed
+                  Bechdel test by their IMDB title genres"
+    columns:
+      - name: genre
+        description: "genre of IMDB titles"
+      - name: bechdelRatingRemark
+        description: "whether a title has passed or failed the Bechdel test"
+      - name: movieCount
+        description: "aggregated count of titles as grouped by given columns"
+
+  - name: measures_oscars
+    description: "table which counts the number of movies which passed or failed
+                  Bechdel test as grouped by their Oscars category"
+    columns:
+      - name: oscarsCategory
+        description: "the category the film was nominated for"
+      - name: oscarsStatus
+        description: "whether the film was only nominated or had won"
+      - name: bechdelRatingRemark
+        description: "whether a title has passed or failed the Bechdel test"
+      - name: movieCount
+        description: "aggregated count of titles as grouped by given columns"
+
+  - name: measures_directors
+    description: "table which counts the number of movies which passed or failed
+                  Bechdel test by directorName"
+    columns:
+      - name: directorName
+        description: "name of the title's director"
+      - name: bechdelRatingRemark
+        description: "whether a title has passed or failed the Bechdel test"
+      - name: movieCount
+        description: "aggregated count of titles as grouped by given columns"
+
+  - name: measures_tables
+    description: "tables which measures other table/view statistics"
+    columns:
+      - name: tableName
+        description: "name of the table/view"
+      - name: rowCount
+        description: "number of rows in the table/view"
+      - name: movieCount
+        description: "number of unique movie titles in the table/view"
+      - name: oldestYear
+        description: "oldest release year of a title in the table/view"
+      - name: latestYear
+        description: "latest release year of a title in the table/view"

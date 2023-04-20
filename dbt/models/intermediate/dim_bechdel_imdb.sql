@@ -23,5 +23,5 @@ FROM bechdel AS b
     ON b.imdbid = t.tconst 
     AND t.startYear = b.year
 {% if var('is_test', default=True) %}
-LIMIT 100000
+LIMIT 10000
 {% endif %}
