@@ -43,10 +43,11 @@ source ./project-venv/bin/activate
 # install all needed packages
 pip install -r requirements.txt
 ```
-<i><b>NOTE:</b> For Selenium, an additional webdriver needs to be installed. [See more info](https://github.com/dherzey/bechdel-movies-project/blob/main/scraper/README.md).</i>
+<i><b>NOTE:</b> For Selenium, an additional webdriver needs to be installed ([install webdriver](https://github.com/dherzey/bechdel-movies-project/blob/main/scraper/README.md)) before running the primary deployment in Prefect. Alternatively, a deployment which does not use Selenium and uses files from [datasets](https://github.com/dherzey/bechdel-movies-project/blob/main/datasets) could be run instead as shown in [running full ETL workflow](https://github.com/dherzey/bechdel-movies-project/tree/main#run-full-etl-workflow).</i>
 
 ### Connect to Prefect cloud
-We can use the local Prefect Orion to see our workflows or we can use Prefect cloud. To connect to Prefect cloud, make sure that you have created an account first.
+We can use Prefect Orion to see our workflows or we can use Prefect cloud. To connect to Prefect cloud, make sure that you have created an account first, then generate your API key through your profile.
+
 ```bash
 # Make sure Prefect is successfully installed
 prefect --help
@@ -63,6 +64,17 @@ prefect config set PREFECT_API_URL = "<API_URL>"
 ```
 
 ### Create Prefect blocks and deployments
+Before running the script to create blocks, make sure the service account file is saved as `~/keys/project_service_key.json`, or change the path to the file under [create_prefect_blocks.py](https://github.com/dherzey/bechdel-movies-project/tree/main/etl/create_prefect_blocks.py):
+
+```python
+if __name__=="__main__":
+
+    # create gcp credentials block
+    service_key_path = "~/keys/project_service_key.json" #change the service account file path
+    gcp_cred_block = create_gcp_cred_block(service_key_path, 
+                                           "bechdel-project-gcp-cred")
+```
+
 ```bash
 # create blocks
 python3 etl/create_prefect_blocks.py
@@ -72,13 +84,13 @@ python3 etl/create_prefect_deployments.py
 ```
 
 ### Run full ETL workflow
+Trigger the alternative full ETL deployment to avoid overusing the BechdelTest.com API (as advised by site's owner) or if having trouble with installing Selenium. 
+
 ```bash
 # start Prefect agent
 prefect agent start -q default
 
-# trigger the alternative full ETL deployment
-# to avoid overusing the BechdelTest.com API
-# or if having trouble with Selenium 
+# trigger alternative full ETL workflow
 prefect deployment run full-etl-flow-alt/bechdel-etl-full-alt
 ```
 
