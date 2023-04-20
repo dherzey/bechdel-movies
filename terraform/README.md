@@ -1,3 +1,6 @@
+## Installing Terraform in Linux
+https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
+
 ## Configure and provision GCP resources
 Before using Terraform, a service account file is needed. The path to this file can be placed in [variables.tf](https://github.com/dherzey/bechdel-movies-project/blob/main/terraform/variables.tf) within the following lines:
 ```

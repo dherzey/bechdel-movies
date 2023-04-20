@@ -8,8 +8,12 @@ Prefect also reads the scripts from a Github repo and executes it through the Pr
 - `bechdel-project-github`: block with the HTTPS info of the Github repo where all the scripts are located. The default is set to this repository (https://github.com/dherzey/bechdel-movies-project.git)
 
 ## Prefect deployments
-
+The following workflows are deployed through Prefect:
+- `bechdel-etl-full`: 
+- `bechdel-etl-full-alt`:
+- `trigger-dbt-prod`:
 
 ## Loading from source to Google Cloud Storage
+The primary Python script for ingesting data from source to GCS is found in [source_to_gcs.py](https://github.com/dherzey/bechdel-movies-project/blob/main/etl/source_to_gcs.py). This starts by calling the Oscar scraper functions to interatc and collect data from the Oscars' database. 
 
 ## Loading from Google Cloud Storage to BigQuery

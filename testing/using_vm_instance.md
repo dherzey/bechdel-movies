@@ -21,6 +21,9 @@ sudo apt-get install python
 #install pip
 sudo apt-get install pip
 
+#install wget
+sudo apt-get install wget
+
 #install git
 sudo apt-get install git
 

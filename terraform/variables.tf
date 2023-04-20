@@ -4,19 +4,19 @@ locals {
 
 variable "project" {
   description = "Your GCP Project ID"
-  default = "data-projects-383009"
+  default = "data-projects-3495"
   type = string
 }
 
 variable "region" {
   description = "Region for GCP resources."
-  default = "us-west1"
+  default = "us-central1"
   type = string
 }
 
 variable "credentials" {
   description = "Location of service account credential file"
-  default = "/home/jdtganding/keys/project_service_key.json"
+  default = "/home/jdtganding0998/keys/project_service_key.json"
   type = string
 }
 

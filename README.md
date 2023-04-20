@@ -1,7 +1,7 @@
 # Bechdel movies and the Academy Awards
-This project is part of the final requirement for DataTalks.Club's data engineerring bootcamp. 
+This project is part of the final requirement for [DataTalks.Club's data engineerring bootcamp](https://github.com/DataTalksClub/data-engineering-zoomcamp/tree/main). 
 
-## Problem Statement
+## Objective
 
 
 ## Data Architecture
@@ -95,7 +95,7 @@ prefect deployment run full-etl-flow-alt/bechdel-etl-full-alt
 ```
 
 ## Transform data using dbt
-Before triggering data transformation of BigQuery tables, make sure to update the service account file path and the project name in [profiles.yml]((https://github.com/dherzey/bechdel-movies-project/blob/main/dbt/profiles.yml) for both dev and prod targets. Then, we can run the following deployments:
+Before triggering data transformation of BigQuery tables, make sure to update the service account file path and the project name in [profiles.yml](https://github.com/dherzey/bechdel-movies-project/blob/main/dbt/profiles.yml) for both dev and prod targets. Then, we can run the following deployments:
 
 ```bash
 # trigger dbt development for testing
@@ -107,5 +107,6 @@ prefect deployment run dbt-prod-flow/trigger-dbt-prod
 ```
 
 ## Dashboard
+
 
 ## Further improvements

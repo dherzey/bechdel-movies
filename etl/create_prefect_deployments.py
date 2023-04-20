@@ -68,11 +68,6 @@ if __name__=="__main__":
     deploy_flow(github_block_name, 
                 etl_full_flow_alt, 
                 "bechdel-etl-full-alt")
-    
-    # trigger dbt commands in dev to transform data in BigQuery
-    deploy_flow(github_block_name,
-                trigger_dbt_dev,
-                "trigger-dbt-dev")
 
     # trigger dbt commands in prod to transform data in BigQuery
     # this will run every 1st day of the month at 4AM
@@ -80,3 +75,8 @@ if __name__=="__main__":
                 trigger_dbt_prod,
                 "trigger-dbt-prod",
                 "0 4 1 * *")
+    
+    # trigger dbt commands in dev to transform data in BigQuery
+    deploy_flow(github_block_name,
+                trigger_dbt_dev,
+                "trigger-dbt-dev")

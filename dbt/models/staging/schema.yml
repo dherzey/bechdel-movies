@@ -14,10 +14,10 @@ sources:
 
 models:
   - name: imdb_title_basics_model
-    description: "contains the transformed data from imdb_title_basics"
+    description: "contains the transformed data from imdb_title_basics_new table"
     columns:
       - name: tconst
-        description: "unique identifier of the imdb title"
+        description: "unique identifier of the IMDB title"
         tests:
           - unique
           - not_null
@@ -36,28 +36,53 @@ models:
                       to three genres and then separated in the model"
 
   - name: bechdel_transform_model
-    description: "dbt model for transforming Bechdel Test movie data"
+    description: "model for transforming Bechdel Test movie data"
     columns:
-      - name: id
-        description: "The primary key for this table"
+      - name: title
+        description: "the name of the movie or title"
+      - name: imdbid
+        description: "unique identifier of the title based on IMDB tconst"
         tests:
           - unique
-          - not_null
+          - not null
+      - name: rating
+        description: "Bechdel Test score of the title"
+      - name: id
+        decription: "unique identifier of the title within bechdeltest.com"
+        tests:
+          - unique
+          - not null
+      - name: year
+        description: "release year of the title"
+      - name: ratingRemark
+        description: "whether the rating is passed or failed; scores of 0-2
+                      are marked as failed while scores with 3 are passed"
 
   - name: imdb_name_basics_model
-    description: "dbt model for transforming Bechdel Test movie data"
+    description: "contains the transformed data from imdb_name_basics table"
     columns:
-      - name: id
-        description: "The primary key for this table"
+      - name: tconst
+        description: "unique identifier of the IMDB title"
         tests:
-          - unique
           - not_null
+      - name: nconst
+        description: "alphanumeric unique identifier of the name/person"
+      - name: primaryName
+        description: "name by which the person is most often credited"
+      - name: birthYear
+        description: "year of birth of person in YYYY format"
+      - name: primaryProfession
+        description: "profession of the person; original data lists the 
+                      top 3 profession"
 
   - name: imdb_title_crew_model
-    description: "dbt model for transforming Bechdel Test movie data"
+    description: "contains the transformed data from imdb_title_crew table"
     columns:
-      - name: id
-        description: "The primary key for this table"
+      - name: tconst
+        description: "unique identifier of the IMDB title"
         tests:
-          - unique
           - not_null
+      - name: director
+        description: "director/s of the given title"
+      - name: writer
+        description: "writer/s of the given title"
