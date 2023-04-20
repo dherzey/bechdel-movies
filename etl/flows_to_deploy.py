@@ -122,23 +122,3 @@ def trigger_dbt_prod(target='prod', is_test=False):
     """
 
     trigger_dbt(target, is_test)
-
-
-@flow(name='dbt-dev-flow')
-def trigger_dbt_dev(target='dev', is_test=True):
-    """
-    Create a flow to trigger dbt commands in development. 
-    This uses the prod profile under the dbt folder.
-
-    Arguments:
-        - target: the name of the target profile to use. 
-                  Can either be dev or prod.
-        - is_test: accepts boolean. If False, dbt will give 
-                   full results of models. Otherwise, results 
-                   have limited rows.
-
-    Returns:
-        None
-    """
-
-    trigger_dbt(target, is_test)

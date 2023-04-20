@@ -30,7 +30,7 @@ def trigger_dbt(target, is_test):
             project_dir = "./dbt/",
             profiles_dir = "./dbt/",
             commands = [f"dbt build --target {target} \
-                        --vars {{is_test:{is_test}}}"]
+                        --vars 'is_test: {is_test}'"]
     )
 
     result.run()

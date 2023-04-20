@@ -47,17 +47,20 @@ rank_title AS (
         WHERE imdbid IN (SELECT imdbid FROM non_unique)
     )
     WHERE rankTitle = 1
+),
+
+non_unique_final AS (
+    SELECT
+        title, 
+        imdbid,
+        id,
+        year,
+        rating,
+        ratingRemark
+    FROM rank_title
+    WHERE rankFinal = 1
 )
 
-SELECT *,
-FROM unique_full
+SELECT * FROM unique_full
 UNION ALL
-SELECT
-    title, 
-    imdbid,
-    id,
-    year,
-    rating,
-    ratingRemark
-FROM rank_title
-WHERE rankFinal = 1
+SELECT * FROM non_unique_final
