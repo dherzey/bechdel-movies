@@ -95,5 +95,16 @@ prefect deployment run full-etl-flow-alt/bechdel-etl-full-alt
 ```
 
 ## Transform data using dbt
+If ETL run is successful, trigger data transformation of BigQuery tables by running the following deployments:
 
-## Final dashboard
+```bash
+# trigger dbt development
+prefect deployment run dbt-dev-flow/trigger-dbt-dev
+
+# trigger dbt production
+prefect deployment run dbt-prod-flow/trigger-dbt-prod
+```
+
+## Data analysis dashboard
+
+## Further improvements

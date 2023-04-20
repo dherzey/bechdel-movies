@@ -75,6 +75,8 @@ if __name__=="__main__":
                 "trigger-dbt-dev")
 
     # trigger dbt commands in prod to transform data in BigQuery
+    # this will run every 1st day of the month at 4AM
     deploy_flow(github_block_name,
                 trigger_dbt_prod,
-                "trigger-dbt-prod")
+                "trigger-dbt-prod",
+                "0 4 1 * *")
