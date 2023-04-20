@@ -2,7 +2,7 @@ version: 2
 
 sources:
   - name: staging
-    database: data-projects-383009
+    database: data-project-3495
     schema: bechdel_movies_project
     tables:
       - name: bechdel
