@@ -1,5 +1,5 @@
 locals {
-  data_lake_bucket = "bechdel-project_data-lake"
+  data_lake_bucket = "bechdel_data_lake"
 }
 
 variable "project" {
@@ -16,7 +16,7 @@ variable "region" {
 
 variable "credentials" {
   description = "Location of service account credential file"
-  default = "/home/jdtganding0998/keys/project_service_key.json"
+  default = "~/keys/project_service_key.json"
   type = string
 }
 

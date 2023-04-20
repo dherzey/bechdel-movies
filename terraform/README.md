@@ -10,7 +10,7 @@ variable "credentials" {
   type = string
 }
 ```
-Alternatively, we can just delete the credentials in the [main.tf](https://github.com/dherzey/bechdel-movies-project/blob/main/terraform/main.tf) file and just set the service account through the command line:
+Alternatively, we can just comment out the credentials in the [main.tf](https://github.com/dherzey/bechdel-movies-project/blob/main/terraform/main.tf) file and just set the service account through the command line:
 ```bash
 export GOOGLE_APPLICATION_CREDENTIALS="<path/to/your/service-account-authkeys>.json"
 

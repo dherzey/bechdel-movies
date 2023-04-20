@@ -40,5 +40,5 @@ python3 -m venv project-venv
 source ./project-venv/bin/activate
 
 #install all packages
-sudo pip3 install -r requirements.txt
+pip install -r requirements.txt
 ```

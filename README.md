@@ -64,16 +64,23 @@ prefect config set PREFECT_API_URL = "<API_URL>"
 ```
 
 ### Create Prefect blocks and deployments
-Before running the script to create blocks, make sure the service account file is saved as `~/keys/project_service_key.json`, or change the path to the file under [create_prefect_blocks.py](https://github.com/dherzey/bechdel-movies-project/tree/main/etl/create_prefect_blocks.py):
+Before running the script to create blocks, make sure the service account file is saved as `~/keys/project_service_key.json`, or change the path to the file under [create_prefect_blocks.py](https://github.com/dherzey/bechdel-movies-project/tree/main/etl/create_prefect_blocks.py). Don't forget to also change the `bucket_name` variable to the appropriate GCS bucket:
 
 ```python
 if __name__=="__main__":
 
     # create gcp credentials block
-    service_key_path = "~/keys/project_service_key.json" #change the service account file path
+    service_key_path = "~/keys/project_service_key.json" #change service account file path
     gcp_cred_block = create_gcp_cred_block(service_key_path, 
                                            "bechdel-project-gcp-cred")
+    
+    # create gcs bucket block
+    bucket_name = "bechdel-project_data-lake" #change bucket name
+    create_gcs_bucket(gcp_cred_block, bucket_name, "bechdel-project-gcs")
 ```
+Additionally, make sure to change the `bucket_name` for the following files: 
+- [gcs_to_bigquery.py](https://github.com/dherzey/bechdel-movies-project/tree/main/etl/gcs_to_bigquery.py)
+- [flows_to_deplot.py](https://github.com/dherzey/bechdel-movies-project/tree/main/etl/flows_to_deploy.py)
 
 ```bash
 # create blocks
@@ -112,3 +119,4 @@ prefect deployment run dbt-prod-flow/trigger-dbt-prod
 ## Recommendations and further improvements
 - to add other additional analysis and measures, such as whether having more women in the cast/crew affects the Bechdel test score of a movie
 - to further develop and organize the dbt models and configurations
+- store variables in a single file for easier update or changes

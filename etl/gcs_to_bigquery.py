@@ -7,6 +7,8 @@ Last modified: April 2023
 from prefect import task, flow
 from prefect_gcp.bigquery import BigQueryWarehouse
 
+bucket_name = "bechdel-project_data-lake"
+
 
 @task(log_prints=True)
 def gcs_to_bigquery(block_name, dataset, table, uri, format):
@@ -107,7 +109,7 @@ def bq_tables_action(dataset, table, action, block_name):
 @flow(name="gcs-to-bigquery")
 def etl_load_to_bq(block_name = "bechdel-project-bigquery", 
                    dataset = "bechdel_movies_project", 
-                   bucket_name = "bechdel-project_data-lake"):
+                   bucket_name = bucket_name):
     """
     Primary workflow which includes loading data from GCS
     to BigQuery. It also includes creating partitioned

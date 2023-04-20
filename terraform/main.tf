@@ -16,7 +16,7 @@ provider "google" {
 
 # data lake storage
 resource "google_storage_bucket" "data_lake_bucket" {
-  name = "${local.data_lake_bucket}"
+  name = "${local.data_lake_bucket}_${var.project}"
   location = var.region
 
   # storage settings

@@ -17,12 +17,14 @@ from gcs_to_bigquery import etl_load_to_bq
 from trigger_dbt_prefect import trigger_dbt
 from source_to_gcs import etl_load_to_gcs, imdb_data_flow, df_to_gcs
 
+bucket_name = "bechdel-project_data-lake"
+
 
 @flow(name="full-etl-flow")
 def etl_full_flow(gcs_block_name = "bechdel-project-gcs",
                   bq_block_name = "bechdel-project-bigquery",
                   dataset = "bechdel_movies_project", 
-                  bucket_name = "bechdel-project_data-lake"):
+                  bucket_name = bucket_name):
     """
     Full ETL workflow which calls both flows for loading data 
     to GCS and to BigQuery
@@ -57,7 +59,8 @@ def etl_load_to_gcs_alt(block_name = 'bechdel-project-gcs'):
         None
     """
 
-    url = "https://raw.githubusercontent.com/dherzey/bechdel-movies-project/main/datasets"
+    url = "https://raw.githubusercontent.com/dherzey/\
+    bechdel-movies-project/main/datasets"
 
     # upload oscars data
     from_path = f'{url}/oscars_awards.csv'
@@ -79,9 +82,9 @@ def etl_load_to_gcs_alt(block_name = 'bechdel-project-gcs'):
 
 @flow(name="full-etl-flow-alt")
 def etl_full_flow_alt(gcs_block_name = "bechdel-project-gcs",
-                  bq_block_name = "bechdel-project-bigquery",
-                  dataset = "bechdel_movies_project", 
-                  bucket_name = "bechdel-project_data-lake"):
+                      bq_block_name = "bechdel-project-bigquery",
+                      dataset = "bechdel_movies_project", 
+                      bucket_name = bucket_name):
     """
     Alternative full ETL workflow which calls both flows for 
     loading data to GCS and to BigQuery
@@ -110,8 +113,9 @@ def trigger_dbt_prod(target='prod', is_test=False):
     Arguments:
         - target: the name of the target profile to use. 
                   Can either be dev or prod.
-        - is_test: accepts boolean. If False, dbt will give full results
-                   of models. Otherwise, results have limited rows.
+        - is_test: accepts boolean. If False, dbt will give 
+                   full results of models. Otherwise, results 
+                   have limited rows.
 
     Returns:
         None
@@ -129,8 +133,9 @@ def trigger_dbt_dev(target='dev', is_test=True):
     Arguments:
         - target: the name of the target profile to use. 
                   Can either be dev or prod.
-        - is_test: accepts boolean. If False, dbt will give full results
-                   of models. Otherwise, results have limited rows.
+        - is_test: accepts boolean. If False, dbt will give 
+                   full results of models. Otherwise, results 
+                   have limited rows.
 
     Returns:
         None
