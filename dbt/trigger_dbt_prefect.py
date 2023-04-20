@@ -29,7 +29,7 @@ def trigger_dbt(target, is_test):
     result = DbtCoreOperation(
             project_dir = "./dbt/",
             profiles_dir = "./dbt/",
-            commands = [f"dbt run --target {target} \
+            commands = [f"dbt build --target {target} \
                         --vars {{is_test:{is_test}}}"]
     )
 

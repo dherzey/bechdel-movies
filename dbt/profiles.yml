@@ -2,7 +2,7 @@ bechdel_dbt_project:
   target: dev
   outputs:
     dev:
-      dataset: bechdel_dbt_dev
+      dataset: development
       job_execution_timeout_seconds: 300
       job_retries: 1
       keyfile: /home/jdtganding0998/keys/project_service_key.json
