@@ -25,11 +25,16 @@ non_unique AS (
 ),
 
 unique_full AS (
+    -- for some reason, WHERE imdb NOT IN () is not working 
+    -- correctly in BigQuery. There are no results shown.
     SELECT *
     FROM bechdel_new
-    WHERE imdbid NOT IN (
-        SELECT imdbid FROM non_unique)
-    AND imdbid IS NOT NULL
+    WHERE imdbid IN (
+            SELECT imdbid
+            FROM bechdel_new
+            WHERE imdbid IS NOT NULL
+            GROUP BY imdbid
+            HAVING COUNT(*) = 1)
 ),
 
 rank_title AS (
