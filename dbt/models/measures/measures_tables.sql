@@ -5,8 +5,8 @@ WITH bechdel AS (
         'bechdel' AS tableName,
         COUNT(*) AS rowCount,
         COUNT(DISTINCT CONCAT(title, year)) AS movieCount,
-        CAST(MIN(year) AS STRING) AS oldestYear,
-        CAST(MAX(year) AS STRING) AS latestYear
+        CAST(MIN(EXTRACT(YEAR from year)) AS STRING) AS oldestYear,
+        CAST(MAX(EXTRACT(YEAR from year)) AS STRING) AS latestYear
     FROM {{ ref('bechdel_transform_model') }}
 ),
 
