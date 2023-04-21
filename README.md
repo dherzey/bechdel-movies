@@ -1,8 +1,7 @@
 # Bechdel movies and the Academy Awards
+
+
 This project is part of the final requirement for [DataTalks.Club's data engineering bootcamp](https://github.com/DataTalksClub/data-engineering-zoomcamp/tree/main). 
-
-## Objective
-
 
 ## Data Architecture
 ![Data architecture of the project!](/diagram/diagram.png)
@@ -115,9 +114,10 @@ prefect deployment run dbt-prod-flow/trigger-dbt-prod
 ```
 
 ## Dashboard
-
+The dashboard is created using Looker with data connection to BigQuery. View the dashboard [here](https://lookerstudio.google.com/reporting/66b1d9b6-0bf5-4ed3-8a96-50e266f0abef).
 
 ## Recommendations and further improvements
-- to add other additional analysis and measures, such as whether having more women in the cast/crew affects the Bechdel test score of a movie
-- to further develop and organize the dbt models and configurations
+- add other additional analysis and measures, such as whether having more women in the cast/crew affects the Bechdel test score of a movie
+- add additional charts in the dashboard and further enhance visualization (try using Tableau or other data visualization tools)
+- further develop and organize the dbt models and configurations used in the project
 - store variables in a single file for easier update or changes
