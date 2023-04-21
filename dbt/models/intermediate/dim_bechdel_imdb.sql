@@ -26,7 +26,7 @@ FROM bechdel AS b
 -- matching results were found for these imdbids. 
 -- This might be incorrectly inputted records. 
 -- Either way, we just exclude these 10 NULL rows.
-WHERE imdbid IS NOT NULL
+WHERE t.tconst IS NOT NULL
 {% if var('is_test')==True %}
 LIMIT 10000
 {% else %}
