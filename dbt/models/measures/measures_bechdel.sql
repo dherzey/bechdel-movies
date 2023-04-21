@@ -6,9 +6,8 @@ WITH bechdel AS (
 )
 
 SELECT
-    EXTRACT(YEAR FROM 
-        PARSE_DATE('%Y', CAST(year AS STRING))
-    ) AS year,
+    PARSE_DATE('%Y', CAST(year AS STRING)) 
+    AS year,
     ratingRemark,
     COUNT(id) AS movieCount
 FROM bechdel
