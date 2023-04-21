@@ -23,3 +23,16 @@ target-path: "target"  # directory which will store compiled SQL files
 clean-targets:         # directories to be removed by `dbt clean`
   - "target"
   - "dbt_packages"
+
+models:
+  bechdel_dbt_project:
+    staging:
+      materialized: view
+    intermediate:
+      materialized: view
+    measures:
+      materialized: table
+
+vars:
+  # set default value
+  is_test: True
