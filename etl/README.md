@@ -9,5 +9,5 @@ Prefect also reads the scripts from a Github repo and executes it through the Pr
 
 ## Prefect deployments
 The following are the primary pipelines deployed through Prefect:
-- `full-etl-flow/bechdel-etl-full`: full ETL workflow which spans ingestion of data from the source (which includes web scraping and reading data by chunks), loading of raw data to GCS bucket in csv and parquet formats, and finally, creating the needed tables in BigQuery with partition and clustering.
-- `dbt-prod-flow/trigger-dbt-prod`: this workflow triggers the `dbt build` command for the production target profile. This reads the tables from BigQuery and transform them into new tables and views needed for further data analysis.
+- `full-etl-flow/bechdel-etl-full`: full ETL workflow which spans ingestion of data from the source (which includes web scraping and reading data by chunks), loading of raw data to GCS bucket in csv and parquet formats and finally, creating the needed tables in BigQuery with partition and clustering. Deployment is scheduled to run every 1st day of the month at 12 AM UTC.
+- `dbt-prod-flow/trigger-dbt-prod`: this workflow triggers the `dbt build` command for the production target profile. This reads the tables from BigQuery and transform them into new tables and views needed for further data analysis. Deployment is schedule to run every 1st day of the month at 3 AM UTC.

@@ -1,5 +1,5 @@
 ## Running dbt CLI with Prefect
-This project uses Prefect to trigger dbt run commands. The Python script for running dbt commands can be found in [trigger_dbt_prefect.py](https://github.com/dherzey/bechdel-movies-project/blob/main/dbt/trigger_dbt_prefect.py). A deployment will be created in Prefect, `trigger-dbt-prod`, for running and testing dbt in the prod environment (see [profiles.yml](https://github.com/dherzey/bechdel-movies-project/blob/main/dbt/profiles.yml) for target details).
+This project uses Prefect to trigger dbt run commands. The Python script for running dbt commands can be found in [trigger_dbt_prefect.py](https://github.com/dherzey/bechdel-movies-project/blob/main/dbt/trigger_dbt_prefect.py). A deployment will be created in Prefect, called `trigger-dbt-prod`, for running dbt in the prod environment (see [profiles.yml](https://github.com/dherzey/bechdel-movies-project/blob/main/dbt/profiles.yml) for target details). It is also scheduled to run every 1st day of the month at 3 AM UTC.
 
 ```bash
 # start Prefect agent (if not yet running)
