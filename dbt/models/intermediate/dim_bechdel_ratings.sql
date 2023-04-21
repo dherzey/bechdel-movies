@@ -19,6 +19,7 @@ SELECT DISTINCT
 FROM bechdel_imdb AS b
     INNER JOIN title_ratings AS r
     ON b.imdbid = r.tconst
-{% if var('is_test', default=True) %}
-LIMIT 1000
+{% if var('is_test')==True %}
+LIMIT 10000
+{% else %}
 {% endif %}

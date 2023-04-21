@@ -20,6 +20,7 @@ SELECT
 FROM title_basics AS t
     INNER JOIN name_basics AS n
     ON t.tconst = n.tconst
-{% if var('is_test', default=True) %}
-LIMIT 1000
+{% if var('is_test')==True %}
+LIMIT 10000
+{% else %}
 {% endif %}

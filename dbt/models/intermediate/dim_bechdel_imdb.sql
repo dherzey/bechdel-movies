@@ -21,7 +21,14 @@ SELECT
 FROM bechdel AS b
     LEFT JOIN title_basics AS t
     ON b.imdbid = t.tconst 
-    AND t.startYear = b.year
-{% if var('is_test', default=True) %}
+-- there seemed to be 10 rows with NULL imdbid in
+-- bechdel. Searching for this in title_basics, no 
+-- matching results were found for these imdbids. 
+-- This might be incorrectly inputted records. 
+-- Either way, we just exclude these 10 NULL rows.
+WHERE imdbid IS NOT NULL
+{% if var('is_test')==True %}
 LIMIT 10000
+{% else %}
 {% endif %}
+
