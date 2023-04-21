@@ -20,7 +20,9 @@ models:
       - name: bechdelRatingRemark
         description: "whether a title has passed or failed the Bechdel test"
       - name: movieCount
-        description: "aggregated count of titles as grouped by given columns"
+        description: "total number of movies per genre per Bechdel score"
+      - name: totalMovieCount
+        description: "total number of movies per genre"
 
   - name: measures_oscars
     description: "table which counts the number of movies which passed or failed

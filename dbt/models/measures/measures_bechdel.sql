@@ -10,7 +10,6 @@ SELECT
     ratingRemark,
     COUNT(id) AS movieCount
 FROM bechdel
-WHERE imdbid IS NOT NULL
 GROUP BY 
     year, 
     ratingRemark
