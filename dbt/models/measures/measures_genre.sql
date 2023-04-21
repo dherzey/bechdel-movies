@@ -13,7 +13,6 @@ total AS (
     WHERE genre IS NOT NULL
     GROUP BY 
         genre
-    ORDER BY movieCount DESC
 ),
 
 genre_score AS (
@@ -26,7 +25,6 @@ genre_score AS (
     GROUP BY 
         genre, 
         bechdelRatingRemark
-    ORDER BY genre
 )
 
 SELECT 
@@ -38,5 +36,5 @@ FROM genre_score AS gs
     INNER JOIN total AS t
     ON gs.genre = t.genre
 ORDER BY
-    genre,
-    movieCount
+    gs.genre,
+    gs.movieCount
