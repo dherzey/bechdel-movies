@@ -5,7 +5,8 @@ WITH bechdel_new AS (
         title, 
         CAST(imdbid AS INT64) AS imdbid,
         id,
-        year,
+        PARSE_DATE('%Y', CAST(year AS STRING))
+        AS year,
         rating,
         CASE
             WHEN rating = 3 THEN 'passed'
