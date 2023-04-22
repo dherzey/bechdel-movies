@@ -1,22 +1,22 @@
 # Bechdel Test in Movies
 <i>This project is part of the final requirement for [DataTalks.Club's data engineering bootcamp](https://github.com/DataTalksClub/data-engineering-zoomcamp/tree/main).</i> 
 
-The Bechdel test, or the Bechdel-Wallace test, is a simple test which measures the representation of women in media. It follows a criteria used to determine how prominent women are in a piece of work. Having all of these criteria passes the Bechdel test:
+The Bechdel test, or the Bechdel-Wallace test, is a simple test which measures the representation of women in media. It follows a criteria used to indicate how present women are in a piece of work. Having all of these criteria passes the Bechdel test:
 
 1. the work has at least two named women
 2. the named women talk to each other
 3. the named women talk to each other about something besides a man
 
-This project aims to create a data pipeline to ingest data from various sources.
+The prominent source used to collect movies with a Bechdel score is found in https://bechdeltest.com/. This project aims to create a pipeline to ingest data from this source and from other sources in order to have an up-to-date analysis regarding the representation of women in movies.
 
 ## Data Architecture
 ![Data architecture of the project!](/diagram/diagram.png)
 
 ## Collecting Data From Source
 Data is collected from the following web sources and database:
-- Academy Awards database
-- BechdelTest.com API
-- IMDB available datasets
+- BechdelTest.com API (updated regularly)
+- Academy Awards database (updated annually)
+- IMDB available datasets (updated daily)
 - The Movie Database API (<i>to be added</i>)
 
 See more info in [datasets](https://github.com/dherzey/bechdel-movies-project/blob/main/datasets).
@@ -125,5 +125,6 @@ The dashboard is created using Looker with data connection to BigQuery. View the
 ## Recommendations
 - add other additional analysis and measures, such as whether having more women in the cast/crew affects the Bechdel test score of a movie
 - add additional charts in the dashboard and enhance visualization
+- try to incorporate other tests to compare with the Bechdel test
 - further develop and organize dbt models and configurations 
 - store variables in a single file for easier update or changes
