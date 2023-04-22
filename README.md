@@ -3,9 +3,9 @@
 
 The Bechdel test, or the Bechdel-Wallace test, is a simple test which measures the representation of women in media. It follows a criteria used to indicate how present women are in a piece of work. Having all of these criteria passes the Bechdel test:
 
-1. the work has at least two named women
-2. the named women talk to each other
-3. the named women talk to each other about something besides a man
+1. the work has at least two [named] women
+2. the [named] women talk to each other
+3. the [named] women talk to each other about something besides a man
 
 The prominent source used to collect movies with a Bechdel score is found in https://bechdeltest.com/. This project aims to create a pipeline to ingest data from this source and from other sources in order to have an up-to-date analysis regarding the representation of women in movies.
 
