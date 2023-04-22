@@ -14,9 +14,9 @@ The prominent source used to collect movies with a Bechdel score is found in htt
 
 ## Collecting Data From Source
 Data is collected from the following web sources and database:
-- BechdelTest.com API (updated regularly)
-- Academy Awards database (updated annually)
-- IMDB available datasets (updated daily)
+- BechdelTest.com API 
+- Academy Awards database 
+- IMDB available datasets 
 - The Movie Database API (<i>to be added</i>)
 
 See more info in [datasets](https://github.com/dherzey/bechdel-movies-project/blob/main/datasets).
