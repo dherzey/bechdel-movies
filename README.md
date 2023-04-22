@@ -1,7 +1,13 @@
-# Bechdel movies and the Academy Awards
+# Bechdel Test in Movies
+<i>This project is part of the final requirement for [DataTalks.Club's data engineering bootcamp](https://github.com/DataTalksClub/data-engineering-zoomcamp/tree/main).</i> 
 
+The Bechdel test, or the Bechdel-Wallace test, is a simple test which measures the representation of women in media. It follows a criteria used to determine how prominent women are in a piece of work. Having all of these criteria passes the Bechdel test:
 
-This project is part of the final requirement for [DataTalks.Club's data engineering bootcamp](https://github.com/DataTalksClub/data-engineering-zoomcamp/tree/main). 
+1. the work has at least two named women
+2. the named women talk to each other
+3. the named women talk to each other about something besides a man
+
+This project aims to create a data pipeline to ingest data from various sources.
 
 ## Data Architecture
 ![Data architecture of the project!](/diagram/diagram.png)
@@ -113,11 +119,11 @@ dbt build
 prefect deployment run dbt-prod-flow/trigger-dbt-prod
 ```
 
-## Dashboard
+## Dashboard and data analysis
 The dashboard is created using Looker with data connection to BigQuery. View the dashboard [here](https://lookerstudio.google.com/reporting/66b1d9b6-0bf5-4ed3-8a96-50e266f0abef).
 
-## Recommendations and further improvements
+## Recommendations
 - add other additional analysis and measures, such as whether having more women in the cast/crew affects the Bechdel test score of a movie
-- add additional charts in the dashboard and further enhance visualization (try using Tableau or other data visualization tools)
-- further develop and organize the dbt models and configurations used in the project
+- add additional charts in the dashboard and enhance visualization
+- further develop and organize dbt models and configurations 
 - store variables in a single file for easier update or changes
